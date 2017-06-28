@@ -18,6 +18,13 @@ function addNamespace(){
     // get the namespace
     ns = document.getElementById("namespaceField").value;
 
+    // if an old element with the same prefix exists,
+    // then remove it
+    el = document.getElementById(pr);
+    if ((el !== undefined) && (el !== null)){
+	el.remove();
+    }
+    
     // get the table and add the namespace
     table = document.getElementById("namespacesTable");
     newRow = table.insertRow(-1);
@@ -71,6 +78,13 @@ function loadJsap(){
 	    
 	    // retrieve namespaces
 	    for (ns in myJson["namespaces"]){
+		
+		// if an old element with the same prefix exists,
+		// then remove it
+		el = document.getElementById(pr);
+		if ((el !== undefined) && (el !== null)){
+		    el.remove();
+		}
 		
 		// add the new item
 		newRow = table.insertRow(-1);
