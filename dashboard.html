@@ -140,7 +140,7 @@
 
 	<!-- QUERY -->
 	<div class="panel panel-default" id="queryPanel">
-	  <div class="panel-heading">Query</div>
+	  <div class="panel-heading">Query/Subscriptions</div>
 	  <div class="panel-body">
 
 	     <form>
@@ -148,37 +148,33 @@
 		 <label for="queryInput">SPARQL Query</label>
 		 <textarea class="form-control" id="queryTextInput">SELECT ?s ?p ?o WHERE { ?s ?p ?o }</textarea>
 	       </div>
-	       <button type="button" class="btn btn-default" onclick="javascript:query();">Submit</button>
-	       <button type="button" class="btn btn-default" onclick="javascript:clr('query');">Clear</button>
+	       <button type="button" class="btn btn-default" onclick="javascript:query();">Query</button>
+	       <button type="button" class="btn btn-default" onclick="javascript:subscribe();">Subscribe</button>
+	       <button type="button" class="btn btn-default" onclick="javascript:clr('query');">Clear Textbox</button>
+	       <button type="button" class="btn btn-default" onclick="javascript:clr('query');">Clear Query Results</button>
+	       <button type="button" class="btn btn-default" onclick="javascript:clr('query');">Clear Subs Results</button>
 	     </form>
 	     
-	    Results
+	    Query Results
 	  <table class="table table-bordered table-hover table-condensed small" id="queryTable">
 	  </table>
-	  </div>
-	  <div class="panel-footer" id="queryPanelFooter">	    
-	  </div>
-	</div>
 
-	<!-- SUBSCRIPTION -->
-	<div class="panel panel-default" id="subscribePanel">
-	  <div class="panel-heading">Subscribe</div>
-	  <div class="panel-body">
 	    Active Subscriptions
-	    <table class="table table-bordered table-hover table-condensed">
+	    <table class="table table-bordered table-hover table-condensed small" id="subidTable">
 	      <tr><th>ID</th><th>Alias</th><th>Actions</th></tr>
 	    </table>
-	    Added Results
-	    <table class="table table-bordered table-hover table-condensed">
-	      <tr><th>?s</th><th>?p</th><th>?o</th></tr>
+	    Subscription - Added Results
+	    <table class="table table-bordered table-hover table-condensed small" id="addedTable">
+	      <tr><th>s</th></tr>
 	    </table>
-	    Deleted Results
-	    <table class="table table-bordered table-hover table-condensed">
-	      <tr><th>?s</th><th>?p</th><th>?o</th></tr>
+	    Subscription - Deleted Results
+	    <table class="table table-bordered table-hover table-condensed small" id="deletedTable">
 	    </table>
+	  
+	  </div>	  
+	  <div class="panel-footer" id="queryPanelFooter">	    
 	  </div>
-	  <div class="panel-footer">
-	  </div>
+	  
 	</div>
 	
     </div>

@@ -1,3 +1,5 @@
+var openSubscriptions = {};
+
 function deleteNamespace(ns){
 
     // debug print
@@ -196,14 +198,14 @@ function query(){
 	    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");	    
 	    console.log("[DEBUG] Connection failed!");
 	    $("#queryPanel").addClass("panel-danger");
-	    document.getElementById("queryPanelFooter").innerHTML = "[" + ts + "] Failure";
+	    document.getElementById("queryPanelFooter").innerHTML = "[" + ts + "] Query request failed";
 	    return false;
 	},
 	success: function(data){
 	    d = new Date();
 	    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");
 	    $("#queryPanel").addClass("panel-success");
-	    document.getElementById("queryPanelFooter").innerHTML = "[" + ts + "] Success";
+	    document.getElementById("queryPanelFooter").innerHTML = "[" + ts + "] Query request successful";
 
 	    // get the table to fill
 	    table = document.getElementById("queryTable");
@@ -259,15 +261,94 @@ function update(){
 	    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");
 	    console.log("[DEBUG] Connection failed!");
 	    $("#updatePanel").addClass("panel-danger");
-	    document.getElementById("updatePanelFooter").innerHTML = "[" + ts + "] Failure";
+	    document.getElementById("updatePanelFooter").innerHTML = "[" + ts + "] Update request failed";
 	    return false;
 	},
 	success: function(data){
 	    d = new Date();
 	    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");
 	    $("#updatePanel").addClass("panel-success");
-	    document.getElementById("updatePanelFooter").innerHTML = "[" + ts + "] Success";
+	    document.getElementById("updatePanelFooter").innerHTML = "[" + ts + "] Update request successful";
 	}
     });
    
 };
+
+function subscribe(){
+
+    // clear the previous success/error colours
+    resetColours();
+    
+    // debug print
+    console.log("[DEBUG] subscribe function invoked");
+    
+    // read the URI
+    subscribeURI = document.getElementById("subscribeUriInput").value;    
+
+    // read the query
+    subscribeText = document.getElementById("queryTextInput").value;    
+
+    // open a websocket
+    var ws = new WebSocket(subscribeURI);
+    ws.onopen = function(){
+
+	// generate an alias
+	alias = "foo";
+	    
+	// send subscription
+	ws.send(JSON.stringify({"subscribe":subscribeText, "alias":alias}));
+    };
+
+    // handler for received messages
+    ws.onmessage = function(event){
+
+	// parse the message
+	msg = JSON.parse(event.data);
+	
+	if (msg["subscribed"] !== undefined){
+	    
+	    // get the subscription id
+	    subid = msg["subscribed"];
+	    subal = msg["alias"];
+	    
+	    // store the subid
+	    table = document.getElementById("subidTable");
+	    newRow = table.insertRow(-1);
+	    newRow.id = subid;
+	    newRow.insertCell(0).innerHTML = subid;
+	    newRow.insertCell(1).innerHTML = subal;
+	    newRow.insertCell(2).innerHTML = "<button action='button' class='btn btn-link btn-sm' onclick='javascript:unsubscribe(" + '"' + subid + '"' + ");'><span class='glyphicon glyphicon-trash' aria-hidden='true'>&nbsp;</span>Unsubscribe</button>";
+
+	    // store the socket
+	    openSubscriptions[subid] = ws;
+	    
+	    
+	} else if ("results" in msg)  {
+	    // TODO - put the results in the tables
+	    console.log("yet to implement!");
+	} else {
+	    console.log(msg);
+	}
+
+    };   
+    
+    // handler for the ws closing
+    ws.onclose = function(event){
+	console.log("[DEBUG] Subscription " + subid + " closed.");
+    };
+
+}
+
+function unsubscribe(subid){
+
+    // debug print
+    console.log("[DEBUG] function unsubscribe invoked");
+
+    // close the websocket
+    openSubscriptions[subid].close();
+    delete openSubscriptions[subid];
+
+    // delete the row from table
+    document.getElementById(subid).remove();
+
+}
