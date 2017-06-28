@@ -24,6 +24,24 @@ function clr(w){
 	};
 	
 	break;
+
+    case "update":
+
+	// clear the textarea
+	console.log("[DEBUG] Clearing update textarea");	
+	document.getElementById("updateTextInput").value = "";
+
+	// clear the panel status
+	console.log("[DEBUG] Resetting panel status");
+	$("#updatePanel").removeClass("panel-success");
+	$("#updatePanel").removeClass("panel-danger");
+
+	// clear the panel footer
+	console.log("[DEBUG] Resetting panel footer");
+	$("#updatePanelFooter").innerHTML = "";
+
+	break;	
+	
     };
     
 };
@@ -66,14 +84,18 @@ function query(){
 	contentType: "application/sparql-query",
 	data: queryText,	
 	error: function(event){
+	    d = new Date();
+	    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");	    
 	    console.log("[DEBUG] Connection failed!");
 	    $("#queryPanel").addClass("panel-danger");
-	    $("#queryPanelFooter").innerHTML = "Failure";
+	    document.getElementById("queryPanelFooter").innerHTML = "[" + ts + "] Failure";
 	    return false;
 	},
 	success: function(data){
+	    d = new Date();
+	    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");
 	    $("#queryPanel").addClass("panel-success");
-	    document.getElementById("queryPanelFooter").innerHTML = "Success";
+	    document.getElementById("queryPanelFooter").innerHTML = "[" + ts + "] Success";
 
 	    // get the table to fill
 	    table = document.getElementById("queryTable");
@@ -103,4 +125,41 @@ function query(){
    
 };
 
-	    
+function update(){
+
+    // clear the previous success/error colours
+    resetColours();
+    
+    // debug print
+    console.log("[DEBUG] update function invoked");
+    
+    // read the URI
+    updateURI = document.getElementById("updateUriInput").value;    
+
+    // read the query
+    updateText = document.getElementById("updateTextInput").value;    
+    
+    // send the update
+    var req = $.ajax({
+	url: updateURI,
+	crossOrigin: true,
+	method: 'POST',
+	contentType: "application/sparql-update",
+	data: updateText,	
+	error: function(event){
+	    d = new Date();
+	    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");
+	    console.log("[DEBUG] Connection failed!");
+	    $("#updatePanel").addClass("panel-danger");
+	    document.getElementById("updatePanelFooter").innerHTML = "[" + ts + "] Failure";
+	    return false;
+	},
+	success: function(data){
+	    d = new Date();
+	    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");
+	    $("#updatePanel").addClass("panel-success");
+	    document.getElementById("updatePanelFooter").innerHTML = "[" + ts + "] Success";
+	}
+    });
+   
+};
