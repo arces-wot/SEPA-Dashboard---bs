@@ -1,3 +1,88 @@
+function deleteNamespace(ns){
+
+    // debug print
+    console.log("[DEBUG] invoked deleteNamespace function");
+
+    // delete the namespace
+    var rowIndex = document.getElementById(ns).remove();
+    
+};
+
+function addNamespace(){
+
+    console.log("[DEBUG] invoked addNamespace function");
+    
+    // get the prefix
+    pr = document.getElementById("prefixField").value;
+
+    // get the namespace
+    ns = document.getElementById("namespaceField").value;
+
+    // get the table and add the namespace
+    table = document.getElementById("namespacesTable");
+    newRow = table.insertRow(-1);
+
+    // prefix cell
+    newCell = newRow.insertCell(0);
+    newCell.innerHTML = pr;
+
+    // namespace cell
+    newCell = newRow.insertCell(1);
+    newCell.innerHTML = ns;
+
+    // bind the prefix to the row
+    newRow.id = pr;
+
+    // actions cell
+    newCell = newRow.insertCell(2);
+    newCell.innerHTML = "<button action='button' class='btn btn-link btn-sm' onclick='javascript:deleteNamespace(" + '"' + pr + '"' + ");'><span class='glyphicon glyphicon-trash' aria-hidden='true''>&nbsp;</span>Delete</button>";
+};
+
+function loadJsap(){
+
+    // debug
+    console.log("[DEBUG] invoked loadJsap function");
+    
+    //check if file reader is supported
+    if ( ! window.FileReader ) {
+	console.log("[ERROR] FileReader API is not supported by your browser.");
+	return false;
+    }
+
+    // load data
+    var $i = $('#loadJsap');		
+    input = $i[0];
+    if ( input.files && input.files[0] ) {	
+	file = input.files[0];
+	
+	// create a mew instance of the file reader
+	fr = new FileReader();		    
+	var text;
+	fr.onload = function () {
+	    
+	    // read the content of the file
+	    var decodedData = fr.result;
+	    
+	    // parse the JSON file
+	    myJson = JSON.parse(decodedData);
+	      
+	    // get the namespaces table
+	    table = document.getElementById("namespacesTable");
+	    
+	    // retrieve namespaces
+	    for (ns in myJson["namespaces"]){
+		
+		// add the new item
+		newRow = table.insertRow(-1);
+		newRow.insertCell(0).innerHTML = ns;
+		newRow.insertCell(1).innerHTML = myJson["namespaces"][ns];
+		newRow.insertCell(2).innerHTML = "<button action='button' class='btn btn-link btn-sm'><span class='glyphicon glyphicon-trash' aria-hidden='true'>&nbsp;</span>Delete</button>";
+	    }
+	};
+	fr.readAsText(file);	
+    }
+};
+
 function clr(w){
 
     console.log("[DEBUG] invoked clr function");

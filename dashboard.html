@@ -56,6 +56,19 @@
 	  JSAP File
 	</div>
 	<div class="panel-body">
+
+	  <div class="row">
+	    <div class="col-lg-6">
+	      <div class="input-group">
+		<input type="file" class="btn btn-default" id="loadJsap">
+	      </div>
+	    </div>
+	    <div class="col-lg-6">
+	      <div class="input-group">
+		<button type="button" class="btn btn-default" id="loadJsapButton" onclick="javascript:loadJsap();">Load JSAP</button>
+	      </div>
+	    </div>
+	  </div>
 	</div>
       </div>
 
@@ -87,7 +100,20 @@
       <div class="panel panel-default">
 	<div class="panel-heading">Namespaces</div>
 	<div class="panel-body">
-	  <table class="table table-bordered table-hover table-condensed">
+
+	  <form class="form-inline small">
+	    <div class="form-group">
+	      <label>Prefix:</label>
+	      <input type="text" class="form-control" id="prefixField">
+	    </div>
+	    <div class="form-group">
+	      <label>Namespace:</label>
+	      <input type="text" class="form-control" id="namespaceField">
+	    </div>
+	    <button type="button" class="btn btn-default" onclick="javascript:addNamespace();">Add</button>	    
+	  </form>
+	  
+	  <table class="table table-bordered table-hover table-condensed small" id="namespacesTable">
 	    <tr><th>Prefix</th><th>Namespace</th><th>Actions</th></tr>
 	  </table>
 	</div>
