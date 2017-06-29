@@ -148,6 +148,10 @@
 		 <label for="queryInput">SPARQL Query</label>
 		 <textarea class="form-control" id="queryTextInput">SELECT ?s ?p ?o WHERE { ?s ?p ?o }</textarea>
 	       </div>
+	       <div class="form-group">
+		 <label for="queryInput">SPARQL Subscription Alias</label>
+		 <input type="text" class="form-control" placeholder="alias" aria-describedby="basic-addon1" id="subscriptionAlias">
+	       </div>
 	       <button type="button" class="btn btn-default" onclick="javascript:query();">Query</button>
 	       <button type="button" class="btn btn-default" onclick="javascript:subscribe();">Subscribe</button>
 	       <button type="button" class="btn btn-default" onclick="javascript:clr('query');">Clear Textbox</button>

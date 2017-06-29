@@ -287,14 +287,14 @@ function subscribe(){
     subscribeURI = document.getElementById("subscribeUriInput").value;    
 
     // read the query
-    subscribeText = document.getElementById("queryTextInput").value;    
+    subscribeText = document.getElementById("queryTextInput").value;
 
     // open a websocket
     var ws = new WebSocket(subscribeURI);
     ws.onopen = function(){
 
 	// generate an alias
-	alias = "foo";
+	alias = document.getElementById("subscriptionAlias").value;
 	    
 	// send subscription
 	ws.send(JSON.stringify({"subscribe":subscribeText, "alias":alias}));
