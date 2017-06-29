@@ -1,4 +1,5 @@
 var openSubscriptions = {};
+var notifCols = [];
 
 function deleteNamespace(ns){
 
@@ -324,8 +325,63 @@ function subscribe(){
 	    
 	    
 	} else if ("results" in msg)  {
-	    // TODO - put the results in the tables
-	    console.log("yet to implement!");
+
+	    // get the table for added and removed results
+	    at = document.getElementById("addedTable");
+	    dt = document.getElementById("deletedTable");
+	    
+	    // iterate over the variables and add them
+	    // to the array if not present
+	    console.log(msg);
+	    for (v in msg["results"]["head"]["vars"]){
+		console.log();
+		if (!(msg["results"]["head"]["vars"][v] in notifCols)){
+
+		    // add the column to the list
+		    notifCols.push(msg["results"]["head"]["vars"][v]);
+		    console.log(notifCols);
+
+		    // todo - add a column to the table
+		    at.rows[0].insertCell(-1).innerHTML = msg["results"]["head"]["vars"][v];
+		}
+	    }
+
+	    // iterate over the ADDED bindings to fill the table
+	    for (r in msg["results"]["addedresults"]["bindings"]){
+
+		// create a new row
+		newRow = at.insertRow(-1);
+		
+		// iterate over the fields
+		for (f in msg["results"]["addedresults"]["bindings"][r]){
+
+		    // get the index of the column
+		    console.log(f);
+		    iv = notifCols.indexOf(f);
+		    newRow.insertCell(iv).innerHTML = msg["results"]["addedresults"]["bindings"][r][f]["value"];
+		}
+		
+	    }
+
+	    // iterate over the DELETED bindings to fill the table
+	    for (r in msg["results"]["removedresults"]["bindings"]){
+
+		// create a new row
+		newRow = dt.insertRow(-1);
+		
+		// iterate over the fields
+		for (f in msg["results"]["removedresults"]["bindings"][r]){
+
+		    // get the index of the column
+		    console.log(f);
+		    iv = notifCols.indexOf(f);
+		    newRow.insertCell(iv).innerHTML = msg["results"]["removedresults"]["bindings"][r][f]["value"];
+		}
+		
+	    }
+	    
+	    // msg["results"]["bindings"]
+	    
 	} else {
 	    console.log(msg);
 	}
@@ -351,4 +407,14 @@ function unsubscribe(subid){
     // delete the row from table
     document.getElementById(subid).remove();
 
+}
+
+function getNamespaces(){
+
+    // get namespace table
+    table = document.getElementById("namespacesTable");
+    for (var i=1; i<table.rows.length; i++) {
+	console.log(table.rows[1]);
+    };
+       
 }
