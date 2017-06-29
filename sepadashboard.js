@@ -454,5 +454,5 @@ function getNamespaces(){
 };
 
 function aboutUs(){
-    alert("Developed by Fabio Viola (ARCES, University of Bologna). Licenced under GPLv3.");
+    alert("Developed by Fabio Viola (ARCES, University of Bologna). Licensed under GPLv3.");
 }
