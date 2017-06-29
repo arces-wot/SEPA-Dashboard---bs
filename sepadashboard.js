@@ -332,25 +332,29 @@ function subscribe(){
 	    
 	    // iterate over the variables and add them
 	    // to the array if not present
-	    console.log(msg);
 	    for (v in msg["results"]["head"]["vars"]){
-		console.log();
-		if (!(msg["results"]["head"]["vars"][v] in notifCols)){
-
+		if (!(notifCols.includes(msg["results"]["head"]["vars"][v]))){
+		    
 		    // add the column to the list
 		    notifCols.push(msg["results"]["head"]["vars"][v]);
-		    console.log(notifCols);
 
-		    // todo - add a column to the table
-		    at.rows[0].insertCell(-1).innerHTML = msg["results"]["head"]["vars"][v];
+		    // add the column to the added and removed tables
+		    at.rows[0].insertCell(-1).outerHTML = "<th>?" + msg["results"]["head"]["vars"][v] + "</th>";
+		    dt.rows[0].insertCell(-1).outerHTML = "<th>?" + msg["results"]["head"]["vars"][v] + "</th>";
 		}
 	    }
 
 	    // iterate over the ADDED bindings to fill the table
 	    for (r in msg["results"]["addedresults"]["bindings"]){
 
-		// create a new row
+		// create a new row with the right number of fields	
 		newRow = at.insertRow(-1);
+		for (var nf=0; nf <= notifCols.length; nf++){
+		    newRow.insertCell(-1);
+		}
+
+		// put the Sub ID into the first column
+		newRow.cells[0].innerHTML = msg["spuid"];
 		
 		// iterate over the fields
 		for (f in msg["results"]["addedresults"]["bindings"][r]){
@@ -358,7 +362,7 @@ function subscribe(){
 		    // get the index of the column
 		    console.log(f);
 		    iv = notifCols.indexOf(f);
-		    newRow.insertCell(iv).innerHTML = msg["results"]["addedresults"]["bindings"][r][f]["value"];
+		    newRow.cells[iv + 1].innerHTML = msg["results"]["addedresults"]["bindings"][r][f]["value"];
 		}
 		
 	    }
@@ -366,21 +370,22 @@ function subscribe(){
 	    // iterate over the DELETED bindings to fill the table
 	    for (r in msg["results"]["removedresults"]["bindings"]){
 
-		// create a new row
+		// create a new row with the right number of fields	
 		newRow = dt.insertRow(-1);
+		for (var nf=0; nf <= notifCols.length; nf++){
+		    newRow.insertCell(-1);
+		}
+		// put the Sub ID into the first column
+		newRow.cells[0].innerHTML = msg["spuid"];
 		
 		// iterate over the fields
 		for (f in msg["results"]["removedresults"]["bindings"][r]){
 
 		    // get the index of the column
-		    console.log(f);
 		    iv = notifCols.indexOf(f);
-		    newRow.insertCell(iv).innerHTML = msg["results"]["removedresults"]["bindings"][r][f]["value"];
-		}
-		
+		    newRow.cells(iv + 1).innerHTML = msg["results"]["removedresults"]["bindings"][r][f]["value"];
+		}		
 	    }
-	    
-	    // msg["results"]["bindings"]
 	    
 	} else {
 	    console.log(msg);
