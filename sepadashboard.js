@@ -193,7 +193,7 @@ function query(){
 	crossOrigin: true,
 	method: 'POST',
 	contentType: "application/sparql-query",
-	data: queryText,	
+	data: getNamespaces() + queryText,	
 	error: function(event){
 	    d = new Date();
 	    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");	    
@@ -256,7 +256,7 @@ function update(){
 	crossOrigin: true,
 	method: 'POST',
 	contentType: "application/sparql-update",
-	data: updateText,	
+	data: getNamespaces() + updateText,	
 	error: function(event){
 	    d = new Date();
 	    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");
@@ -287,7 +287,7 @@ function subscribe(){
     subscribeURI = document.getElementById("subscribeUriInput").value;    
 
     // read the query
-    subscribeText = document.getElementById("queryTextInput").value;
+    subscribeText = getNamespaces() + document.getElementById("queryTextInput").value;
 
     // open a websocket
     var ws = new WebSocket(subscribeURI);
@@ -416,10 +416,16 @@ function unsubscribe(subid){
 
 function getNamespaces(){
 
-    // get namespace table
+    // initialize the results
+    ns = "";
+    
+    // get namespace table    
     table = document.getElementById("namespacesTable");
     for (var i=1; i<table.rows.length; i++) {
-	console.log(table.rows[1]);
+	ns += "PREFIX " + table.rows[i].cells[0].innerHTML + ": <" + table.rows[i].cells[1].innerHTML + "> ";
     };
+
+    // return
+    return ns;
        
 }
