@@ -113,11 +113,11 @@ function loadJsap(){
 	    }
 
 	    // retrieve the URLs
-	    uURI = "http://" + myJson["parameters"]["host"] + ":" + myJson["parameters"]["ports"]["http"] + "/" + myJson["parameters"]["paths"]["update"];
+	    uURI = "http://" + myJson["parameters"]["host"] + ":" + myJson["parameters"]["ports"]["http"] + myJson["parameters"]["paths"]["update"];
 	    document.getElementById("updateUriInput").value = uURI;    
-	    qURI = "http://" + myJson["parameters"]["host"] + ":" + myJson["parameters"]["ports"]["http"] + "/" + myJson["parameters"]["paths"]["query"];
+	    qURI = "http://" + myJson["parameters"]["host"] + ":" + myJson["parameters"]["ports"]["http"] + myJson["parameters"]["paths"]["query"];
 	    document.getElementById("queryUriInput").value = qURI;    
-	    sURI = "ws://" + myJson["parameters"]["host"] + ":" + myJson["parameters"]["ports"]["ws"] + "/" + myJson["parameters"]["paths"]["subscribe"];
+	    sURI = "ws://" + myJson["parameters"]["host"] + ":" + myJson["parameters"]["ports"]["ws"] + myJson["parameters"]["paths"]["subscribe"];
 	    document.getElementById("subscribeUriInput").value = sURI;    
 	    
 	};
