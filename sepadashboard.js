@@ -1,6 +1,12 @@
 var openSubscriptions = {};
 var notifCols = [];
 
+function getTimestamp(){
+    d = new Date();
+    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");
+    return ts;
+}
+
 function deleteNamespace(ns){
 
     // debug print
@@ -8,7 +14,10 @@ function deleteNamespace(ns){
 
     // delete the namespace
     var rowIndex = document.getElementById(ns).remove();
-    
+
+    // add message to the footer
+    document.getElementById("nsPanelFooter").innerHTML = "[" + getTimestamp() + "] prefix " + ns + " deleted";
+   
 };
 
 function addNamespace(){
@@ -46,6 +55,10 @@ function addNamespace(){
     // actions cell
     newCell = newRow.insertCell(2);
     newCell.innerHTML = "<button action='button' class='btn btn-link btn-sm' onclick='javascript:deleteNamespace(" + '"' + pr + '"' + ");'><span class='glyphicon glyphicon-trash' aria-hidden='true''>&nbsp;</span>Delete</button>";
+
+    // add message to the footer
+    document.getElementById("nsPanelFooter").innerHTML = "[" + getTimestamp() + "] new prefix " + pr + " defined";
+    
 };
 
 function loadJsap(){
@@ -90,10 +103,13 @@ function loadJsap(){
 		}
 		
 		// add the new item
+		console.log(ns);
 		newRow = table.insertRow(-1);
+		newRow.id = ns;
 		newRow.insertCell(0).innerHTML = ns;
 		newRow.insertCell(1).innerHTML = myJson["namespaces"][ns];
-		newRow.insertCell(2).innerHTML = "<button action='button' class='btn btn-link btn-sm'><span class='glyphicon glyphicon-trash' aria-hidden='true'>&nbsp;</span>Delete</button>";
+		newRow.insertCell(2).innerHTML = "<button action='button' class='btn btn-link btn-sm' onclick='javascript:deleteNamespace(" + '"' + ns + '"' + ");'><span class='glyphicon glyphicon-trash' aria-hidden='true''>&nbsp;</span>Delete</button>";
+
 	    }
 
 	    // retrieve the URLs
@@ -107,12 +123,39 @@ function loadJsap(){
 	};
 	fr.readAsText(file);	
     }
+
+    // put message in the footer
+    document.getElementById("jsapPanelFooter").innerHTML = "[" + getTimestamp() + "] JSAP file loaded";
+    
 };
 
 function clr(w){
 
     console.log("[DEBUG] invoked clr function");
     switch (w) {
+    case "subTables":
+
+	// clear the added table
+	table = document.getElementById("addedTable");
+	while(table.rows.length > 0) {
+	    table.deleteRow(-1);
+	};
+	newRow = table.insertRow(-1);
+	newRow.insertCell(0).outerHTML = "<th>Sub ID</th>"
+
+	// clear the table
+	table = document.getElementById("deletedTable");
+	while(table.rows.length > 0) {
+	    table.deleteRow(-1);
+	};
+	newRow = table.insertRow(-1);	
+	newRow.insertCell(0).outerHTML = "<th>Sub ID</th>"
+
+	// clear the list of variables
+	notifCols = [];
+	
+	break;
+	
     case "query":
 
 	// clear the textarea
@@ -121,18 +164,10 @@ function clr(w){
 
 	// clear the panel status
 	console.log("[DEBUG] Resetting panel status");
-	$("#queryPanel").removeClass("panel-success");
-	$("#queryPanel").removeClass("panel-danger");
 
 	// clear the panel footer
 	console.log("[DEBUG] Resetting panel footer");
 	$("#queryPanelFooter").innerHTML = "";
-
-	// clear the table
-	table = document.getElementById("queryTable");
-	while(table.rows.length > 0) {
-	    table.deleteRow(-1);
-	};
 	
 	break;
 
@@ -142,41 +177,28 @@ function clr(w){
 	console.log("[DEBUG] Clearing update textarea");	
 	document.getElementById("updateTextInput").value = "";
 
-	// clear the panel status
-	console.log("[DEBUG] Resetting panel status");
-	$("#updatePanel").removeClass("panel-success");
-	$("#updatePanel").removeClass("panel-danger");
-
 	// clear the panel footer
 	console.log("[DEBUG] Resetting panel footer");
 	$("#updatePanelFooter").innerHTML = "";
 
-	break;	
+	break;
+
+    case "queryResults":
+
+	// clear the table
+	table = document.getElementById("queryTable");
+	while(table.rows.length > 0) {
+	    table.deleteRow(-1);
+	};
 	
-    };
+	break
+	
+	
+    };    
     
 };
 
-function resetColours(){
-
-    // clear the query panel
-    $("#queryPanel").removeClass("panel-success");
-    $("#queryPanel").removeClass("panel-danger");
-
-    // clear the query panel
-    $("#updatePanel").removeClass("panel-success");
-    $("#updatePanel").removeClass("panel-danger");
-
-    // clear the query panel
-    $("#subscribePanel").removeClass("panel-success");
-    $("#subscribePanel").removeClass("panel-danger");
-  
-};
-
 function query(){
-
-    // clear the previous success/error colours
-    resetColours();
     
     // debug print
     console.log("[DEBUG] query function invoked");
@@ -198,14 +220,12 @@ function query(){
 	    d = new Date();
 	    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");	    
 	    console.log("[DEBUG] Connection failed!");
-	    $("#queryPanel").addClass("panel-danger");
 	    document.getElementById("queryPanelFooter").innerHTML = "[" + ts + "] Query request failed";
 	    return false;
 	},
 	success: function(data){
 	    d = new Date();
 	    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");
-	    $("#queryPanel").addClass("panel-success");
 	    document.getElementById("queryPanelFooter").innerHTML = "[" + ts + "] Query request successful";
 
 	    // get the table to fill
@@ -226,7 +246,6 @@ function query(){
 	    // add results	    
 	    for (line in data["results"]["bindings"]){
 		newRow = table.insertRow(-1);
-		console.log(data["results"]["bindings"][line]);
 		for (el in data["results"]["bindings"][line]){
 		    newCell = newRow.insertCell(-1).innerHTML = data["results"]["bindings"][line][el]["value"];
 		}
@@ -237,9 +256,6 @@ function query(){
 };
 
 function update(){
-
-    // clear the previous success/error colours
-    resetColours();
     
     // debug print
     console.log("[DEBUG] update function invoked");
@@ -261,14 +277,12 @@ function update(){
 	    d = new Date();
 	    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");
 	    console.log("[DEBUG] Connection failed!");
-	    $("#updatePanel").addClass("panel-danger");
 	    document.getElementById("updatePanelFooter").innerHTML = "[" + ts + "] Update request failed";
 	    return false;
 	},
 	success: function(data){
 	    d = new Date();
 	    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");
-	    $("#updatePanel").addClass("panel-success");
 	    document.getElementById("updatePanelFooter").innerHTML = "[" + ts + "] Update request successful";
 	}
     });
@@ -276,9 +290,6 @@ function update(){
 };
 
 function subscribe(){
-
-    // clear the previous success/error colours
-    resetColours();
     
     // debug print
     console.log("[DEBUG] subscribe function invoked");
@@ -318,11 +329,14 @@ function subscribe(){
 	    newRow.id = subid;
 	    newRow.insertCell(0).innerHTML = subid;
 	    newRow.insertCell(1).innerHTML = subal;
-	    newRow.insertCell(2).innerHTML = "<button action='button' class='btn btn-link btn-sm' onclick='javascript:unsubscribe(" + '"' + subid + '"' + ");'><span class='glyphicon glyphicon-trash' aria-hidden='true'>&nbsp;</span>Unsubscribe</button>";
+	    newRow.insertCell(2).innerHTML = "<button action='button' class='btn btn-primary btn-sm' onclick='javascript:unsubscribe(" + '"' + subid + '"' + ");'><span class='glyphicon glyphicon-trash' aria-hidden='true'>&nbsp;</span>Unsubscribe</button>";
 
 	    // store the socket
 	    openSubscriptions[subid] = ws;
-	    
+
+	    // put a message in the footer
+	    document.getElementById("submanPanelFooter").innerHTML = "[" + getTimestamp() + "] subscription " + subal + " confirmed";
+	    document.getElementById("queryPanelFooter").innerHTML = "[" + getTimestamp() + "] subscription " + subal + " confirmed";
 	    
 	} else if ("results" in msg)  {
 
@@ -395,7 +409,17 @@ function subscribe(){
     
     // handler for the ws closing
     ws.onclose = function(event){
+
+	// debug print
 	console.log("[DEBUG] Subscription " + subid + " closed.");
+
+	// put a message in the footer
+	document.getElementById("queryPanelFooter").innerHTML = "[" + getTimestamp() + "] subscription " + subid + " closed";
+	document.getElementById("submanPanelFooter").innerHTML = "[" + getTimestamp() + "] subscription " + subid + " closed";
+
+	// delete the subscription from the local array
+	delete openSubscriptions[subid];
+	
     };
 
 }
@@ -407,7 +431,6 @@ function unsubscribe(subid){
 
     // close the websocket
     openSubscriptions[subid].close();
-    delete openSubscriptions[subid];
 
     // delete the row from table
     document.getElementById(subid).remove();
@@ -428,4 +451,8 @@ function getNamespaces(){
     // return
     return ns;
        
+};
+
+function aboutUs(){
+    alert("Developed by Fabio Viola (ARCES, University of Bologna). Licenced under GPLv3.");
 }

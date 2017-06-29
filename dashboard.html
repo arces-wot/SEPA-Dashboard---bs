@@ -41,7 +41,7 @@
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Home</a></li>
-            <li><a href="about.html">About</a></li>
+            <li><a href="javascript:aboutUs();">About</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -50,8 +50,8 @@
     <!-- MAIN CONTAINER -->
     <div class="container">
 
-      <!-- CONNECTION PARAMETERS -->
-      <div class="panel panel-default">
+      <!-- JSAP -->
+      <div class="panel panel-primary">
 	<div class="panel-heading">
 	  JSAP File
 	</div>
@@ -60,21 +60,23 @@
 	  <div class="row">
 	    <div class="col-lg-6">
 	      <div class="input-group">
-		<input type="file" class="btn btn-default" id="loadJsap">
+		<input type="file" class="btn" id="loadJsap">
 	      </div>
 	    </div>
 	    <div class="col-lg-6">
 	      <div class="input-group">
-		<button type="button" class="btn btn-default" id="loadJsapButton" onclick="javascript:loadJsap();">Load JSAP</button>
+		<button type="button" class="btn btn-primary" id="loadJsapButton" onclick="javascript:loadJsap();">Load JSAP</button>
 	      </div>
 	    </div>
 	  </div>
+	</div>
+	<div class="panel-footer small" id="jsapPanelFooter">	    
 	</div>
       </div>
 
       
       <!-- CONNECTION PARAMETERS -->
-      <div class="panel panel-default">
+      <div class="panel panel-primary">
 	<div class="panel-heading">
 	  Connection Parameters
 	</div>
@@ -94,10 +96,12 @@
 	    <input type="text" class="form-control" placeholder="ws://wot.arces.unibo.it:9000/subscribe" aria-describedby="basic-addon1" id="subscribeUriInput">
 	  </div>
 	</div>
+	<div class="panel-footer small" id="connectionPanelFooter">	    
+	</div>
       </div>
 
       <!-- NAMESPACES -->
-      <div class="panel panel-default">
+      <div class="panel panel-primary">
 	<div class="panel-heading">Namespaces</div>
 	<div class="panel-body">
 
@@ -110,17 +114,19 @@
 	      <label>Namespace:</label>
 	      <input type="text" class="form-control" id="namespaceField">
 	    </div>
-	    <button type="button" class="btn btn-default" onclick="javascript:addNamespace();">Add/Edit</button>	    
+	    <button type="button" class="btn btn-primary" onclick="javascript:addNamespace();">Add/Edit</button>	    
 	  </form>
 	  
 	  <table class="table table-bordered table-hover table-condensed small" id="namespacesTable">
 	    <tr><th>Prefix</th><th>Namespace</th><th>Actions</th></tr>
 	  </table>
 	</div>
+	<div class="panel-footer small" id="nsPanelFooter">	    
+	</div>
 	</div>
 	
 	<!-- UPDATE -->
-	<div class="panel panel-default" id="updatePanel">
+	<div class="panel panel-primary" id="updatePanel">
 	  <div class="panel-heading">Update</div>
 	  <div class="panel-body">
 	    
@@ -129,17 +135,17 @@
 		<label for="updateInput">SPARQL Update</label>
 		<textarea class="form-control" id="updateTextInput"></textarea>
 	      </div>
-	      <button type="button" class="btn btn-default" onclick="javascript:update();">Submit</button>
-	      <button type="button" class="btn btn-default" onclick="javascript:clr('update');">Clear</button>
+	      <button type="button" class="btn btn-primary" onclick="javascript:update();">Submit</button>
+	      <button type="button" class="btn btn-primary" onclick="javascript:clr('update');">Clear</button>
 	     </form>
 	    
 	  </div>
-	  <div class="panel-footer" id="updatePanelFooter">
+	  <div class="panel-footer small" id="updatePanelFooter">
 	  </div>
 	</div>
 
 	<!-- QUERY -->
-	<div class="panel panel-default" id="queryPanel">
+	<div class="panel panel-primary" id="queryPanel">
 	  <div class="panel-heading">Query/Subscriptions</div>
 	  <div class="panel-body">
 
@@ -152,32 +158,52 @@
 		 <label for="queryInput">SPARQL Subscription Alias</label>
 		 <input type="text" class="form-control" placeholder="alias" aria-describedby="basic-addon1" id="subscriptionAlias">
 	       </div>
-	       <button type="button" class="btn btn-default" onclick="javascript:query();">Query</button>
-	       <button type="button" class="btn btn-default" onclick="javascript:subscribe();">Subscribe</button>
-	       <button type="button" class="btn btn-default" onclick="javascript:clr('query');">Clear Textbox</button>
-	       <button type="button" class="btn btn-default" onclick="javascript:clr('query');">Clear Query Results</button>
-	       <button type="button" class="btn btn-default" onclick="javascript:clr('query');">Clear Subs Results</button>
+	       <button type="button" class="btn btn-primary" onclick="javascript:query();">Query</button>
+	       <button type="button" class="btn btn-primary" onclick="javascript:subscribe();">Subscribe</button>
 	     </form>
-	     
-	    Query Results
-	  <table class="table table-bordered table-hover table-condensed small" id="queryTable">
-	  </table>
+	  </div>
+	  <div class="panel-footer small" id="queryPanelFooter">	    
+	  </div>
+	  </div>
 
+	<div class="panel panel-primary">
+	  <div class="panel-heading">Query Results</div>
+	  <div class="panel-body">
+	    <table class="table table-bordered table-hover table-condensed small" id="queryTable">
+	    </table>
+	    <button type="button" class="btn btn-primary" onclick="javascript:clr('queryResults');">Clear</button>
+	  </div>
+	  <div class="panel-footer small" id="queryPanelFooter">	    
+	  </div>
+	</div>
+
+	<div class="panel panel-primary">
+	  <div class="panel-heading">Subscription Management</div>
+	  <div class="panel-body">
 	    Active Subscriptions
 	    <table class="table table-bordered table-hover table-condensed small" id="subidTable">
 	      <tr><th>ID</th><th>Alias</th><th>Actions</th></tr>
 	    </table>
-	    Subscription - Added Results
+	  </div>
+	  <div class="panel-footer small" id="submanPanelFooter">	    
+	  </div>
+	</div>
+
+	<div class="panel panel-primary">
+	  <div class="panel-heading">Subscription Results</div>
+	  <div class="panel-body">
+	    Added Results
 	    <table class="table table-bordered table-hover table-condensed small" id="addedTable">
 	      <tr><th>Sub ID</th></tr>
 	    </table>
-	    Subscription - Deleted Results
+
+	    Deleted Results
 	    <table class="table table-bordered table-hover table-condensed small" id="deletedTable">
 	      <tr><th>Sub ID</th></tr>
 	    </table>
-	  
+	    <button type="button" class="btn btn-primary" onclick="javascript:clr('subTables');">Clear Tables</button>	  
 	  </div>	  
-	  <div class="panel-footer" id="queryPanelFooter">	    
+	  <div class="panel-footer small" id="subresPanelFooter">	    
 	  </div>
 	  
 	</div>
