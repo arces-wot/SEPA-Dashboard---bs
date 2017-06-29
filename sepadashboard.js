@@ -54,7 +54,7 @@ function addNamespace(){
 
     // actions cell
     newCell = newRow.insertCell(2);
-    newCell.innerHTML = "<button action='button' class='btn btn-link btn-sm' onclick='javascript:deleteNamespace(" + '"' + pr + '"' + ");'><span class='glyphicon glyphicon-trash' aria-hidden='true''>&nbsp;</span>Delete</button>";
+    newCell.innerHTML = "<button action='button' class='btn btn-primary btn-sm' onclick='javascript:deleteNamespace(" + '"' + pr + '"' + ");'><span class='glyphicon glyphicon-trash' aria-hidden='true''>&nbsp;</span>Delete</button>";
 
     // add message to the footer
     document.getElementById("nsPanelFooter").innerHTML = "[" + getTimestamp() + "] new prefix " + pr + " defined";
@@ -108,7 +108,7 @@ function loadJsap(){
 		newRow.id = ns;
 		newRow.insertCell(0).innerHTML = ns;
 		newRow.insertCell(1).innerHTML = myJson["namespaces"][ns];
-		newRow.insertCell(2).innerHTML = "<button action='button' class='btn btn-link btn-sm' onclick='javascript:deleteNamespace(" + '"' + ns + '"' + ");'><span class='glyphicon glyphicon-trash' aria-hidden='true''>&nbsp;</span>Delete</button>";
+		newRow.insertCell(2).innerHTML = "<button action='button' class='btn btn-primary btn-sm' onclick='javascript:deleteNamespace(" + '"' + ns + '"' + ");'><span class='glyphicon glyphicon-trash' aria-hidden='true''>&nbsp;</span>Delete</button>";
 
 	    }
 
