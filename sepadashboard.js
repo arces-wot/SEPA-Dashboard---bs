@@ -128,6 +128,8 @@ function loadJsap(){
 			li.setAttribute("id", q);
 			li.innerHTML = q;
 			li.setAttribute("onclick", "javascript:loadUpdateQuery(false, '" + q + "');");
+			li.setAttribute("data-toggle", "modal");
+			li.setAttribute("data-target", "#basicModal");	
 			ul.appendChild(li);
 		}
 	    
@@ -137,9 +139,12 @@ function loadJsap(){
 			li = document.createElement("li");			
 			li.setAttribute("id", q);
 			li.innerHTML = q;
-			li.setAttribute("onclick", "javascript:loadUpdateQuery(true, '" + q + "');");
+			li.setAttribute("onclick", "javascript:loadUpdateQuery(true, '" + q + "');");		
+			li.setAttribute("data-toggle", "modal");
+			li.setAttribute("data-target", "#basicModal");			
 			ul.appendChild(li);
 		}
+		
 	};
 	fr.readAsText(file);	
     }
@@ -156,11 +161,82 @@ function loadUpdateQuery(u, uqname){
 	// u === false -> query/sub
 	
 	if (u){		
-		// get the update content from JSAP		
-		document.getElementById("updateTextInput").value = myJson["updates"][uqname]["sparql"];
+		// get the update content from JSAP					
+		document.getElementById("updateTextInput").value = myJson["updates"][uqname]["sparql"];						
+
+		if ("forcedBindings" in myJson["updates"][uqname]){
+			console.log(Object.keys(myJson["updates"][uqname]["forcedBindings"]).length);
+			if (Object.keys(myJson["updates"][uqname]["forcedBindings"]).length > 0){
+			
+				// now put the forced bindings variables into the form
+				form = document.getElementById("fbForm");			
+			
+				// remove old elements		
+				form.innerHTML = "";
+							
+				// set the title of the form 
+				document.getElementById("forcedBindingsHeader").innerHTML = "update:" + uqname;
+			
+				// prepare the content of the form
+				for (fb in myJson["updates"][uqname]["forcedBindings"]){				
+							
+					// add a label				
+					linput = document.createElement("label");
+					linput.innerHTML = fb + " (" + myJson["updates"][uqname]["forcedBindings"][fb]["type"] + ")";
+					form.appendChild(linput);
+					
+					// add the entry field			
+					input = document.createElement("input");
+					input.type = "text";
+					input.setAttribute("id", fb);
+					input.setAttribute("placeholder", "?" + fb);
+					input.setAttribute("class", "form-control");
+					form.appendChild(input);
+					form.appendChild(document.createElement("br"));									
+					
+				};
+			};
+		};
+		
 	} else {
+		
 		// get the query content from JSAP	
 		document.getElementById("queryTextInput").value = myJson["subscribes"][uqname]["sparql"];
+		
+		if ("forcedBindings" in myJson["subscribes"][uqname]){
+			console.log(Object.keys(myJson["subscribes"][uqname]["forcedBindings"]).length);
+			if (Object.keys(myJson["subscribes"][uqname]["forcedBindings"]).length > 0){
+			
+				// now put the forced bindings variables into the form
+				form = document.getElementById("fbForm");			
+			
+				// remove old elements		
+				form.innerHTML = "";
+							
+				// set the title of the form 
+				document.getElementById("forcedBindingsHeader").innerHTML = "query:" + uqname;
+			
+				// prepare the content of the form
+				for (fb in myJson["subscribes"][uqname]["forcedBindings"]){				
+							
+					// add a label				
+					linput = document.createElement("label");
+					linput.innerHTML = fb + " (" + myJson["subscribes"][uqname]["forcedBindings"][fb]["type"] + ")";
+					form.appendChild(linput);
+					
+					// add the entry field			
+					input = document.createElement("input");
+					input.type = "text";
+					input.setAttribute("id", fb);
+					input.setAttribute("placeholder", "?" + fb);
+					input.setAttribute("class", "form-control");
+					form.appendChild(input);
+					form.appendChild(document.createElement("br"));									
+					
+				};
+			};
+		};
+		
 	}
 };
 
@@ -491,3 +567,42 @@ function getNamespaces(){
 function aboutUs(){
     alert("Developed by Fabio Viola (ARCES, University of Bologna). Licensed under GPLv3.");
 }
+
+function parseForcedBindings(){
+	
+	// debug print
+	console.log("[DEBUG] function parseForcedBindings invoked");
+	
+	// find if it is a query or an update and its name
+	u = document.getElementById("forcedBindingsHeader").innerHTML.split(":")[0];
+	uqname = document.getElementById("forcedBindingsHeader").innerHTML.split(":")[1];	
+	uqtext = null;
+	if (u === "update"){
+		uqtext = myJson["updates"][uqname]["sparql"];
+	} else {
+		uqtext = myJson["subscribes"][uqname]["sparql"];
+	};
+	
+	// read values from form
+	form = document.getElementById("fbForm");
+	els = form.getElementsByTagName('input');			
+	for (var c=0; c < els.length; c++){
+		
+		// build a regexp for the substitution
+		varname = els[c].placeholder;
+		varvalue = els[c].value;
+		r = new RegExp('\\?' + varname.substring(1) + '\\s+', 'g');
+		uqtext = uqtext.replace(r, varvalue + " ");				
+	};	
+	
+	// fill the query/update textbox
+	if (u === "update"){
+		document.getElementById("updateTextInput").value = uqtext;					
+	} else {
+		document.getElementById("queryTextInput").value = uqtext;
+	};
+	
+	
+	// close the popup
+	
+};
