@@ -601,8 +601,8 @@ function parseForcedBindings(){
 	} else {
 		document.getElementById("queryTextInput").value = uqtext;
 	};
-	
-	
+		
 	// close the popup
+	$("#basicModal").modal('hide');
 	
 };
