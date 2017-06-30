@@ -127,10 +127,19 @@ function loadJsap(){
 			li = document.createElement("li");			
 			li.setAttribute("id", q);
 			li.innerHTML = q;
-			li.setAttribute("onclick", "javascript:loadQuery('" + q + "');");
+			li.setAttribute("onclick", "javascript:loadUpdateQuery(false, '" + q + "');");
 			ul.appendChild(li);
 		}
 	    
+	    // load updates
+		ul = document.getElementById("updateDropdown");
+		for (q in myJson["updates"]){
+			li = document.createElement("li");			
+			li.setAttribute("id", q);
+			li.innerHTML = q;
+			li.setAttribute("onclick", "javascript:loadUpdateQuery(true, '" + q + "');");
+			ul.appendChild(li);
+		}
 	};
 	fr.readAsText(file);	
     }
@@ -140,11 +149,19 @@ function loadJsap(){
     
 };
 
-function loadQuery(qname){
+function loadUpdateQuery(u, uqname){
 	
-	// get the query content from JSAP	
-	document.getElementById("queryTextInput").value = myJson["subscribes"][qname]["sparql"];
+	// check the value of u
+	// u === true -> update
+	// u === false -> query/sub
 	
+	if (u){		
+		// get the update content from JSAP		
+		document.getElementById("updateTextInput").value = myJson["updates"][uqname]["sparql"];
+	} else {
+		// get the query content from JSAP	
+		document.getElementById("queryTextInput").value = myJson["subscribes"][uqname]["sparql"];
+	}
 };
 
 function clr(w){
