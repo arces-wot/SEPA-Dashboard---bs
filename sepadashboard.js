@@ -1,5 +1,6 @@
 var openSubscriptions = {};
 var notifCols = [];
+var myJson = null;
 
 function getTimestamp(){
     d = new Date();
@@ -120,6 +121,16 @@ function loadJsap(){
 	    sURI = "ws://" + myJson["parameters"]["host"] + ":" + myJson["parameters"]["ports"]["ws"] + myJson["parameters"]["paths"]["subscribe"];
 	    document.getElementById("subscribeUriInput").value = sURI;    
 	    
+		// load queries
+		ul = document.getElementById("queryDropdown");
+		for (q in myJson["subscribes"]){
+			li = document.createElement("li");			
+			li.setAttribute("id", q);
+			li.innerHTML = q;
+			li.setAttribute("onclick", "javascript:loadQuery('" + q + "');");
+			ul.appendChild(li);
+		}
+	    
 	};
 	fr.readAsText(file);	
     }
@@ -127,6 +138,13 @@ function loadJsap(){
     // put message in the footer
     document.getElementById("jsapPanelFooter").innerHTML = "[" + getTimestamp() + "] JSAP file loaded";
     
+};
+
+function loadQuery(qname){
+	
+	// get the query content from JSAP	
+	document.getElementById("queryTextInput").value = myJson["subscribes"][qname]["sparql"];
+	
 };
 
 function clr(w){
