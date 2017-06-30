@@ -302,8 +302,22 @@ function clr(w){
 	    table.deleteRow(-1);
 	};
 	
-	break
+	break;
 	
+	case "all":
+	
+	// clear all the fields
+	document.getElementById("updateTextInput").value = "";
+	document.getElementById("queryTextInput").value = "";
+	document.getElementById("subscriptionAlias").value = "";
+	document.getElementById("updateUriInput").value = "";
+	document.getElementById("subscribeUriInput").value = "";
+	document.getElementById("queryUriInput").value = "";
+	clr("query");
+	clr("subTables");
+	clr("queryResults");
+
+	break;
 	
     };    
     
@@ -606,3 +620,4 @@ function parseForcedBindings(){
 	$("#basicModal").modal('hide');
 	
 };
+
