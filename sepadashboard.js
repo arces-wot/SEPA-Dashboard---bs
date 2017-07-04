@@ -3,10 +3,9 @@ var notifCols = [];
 var myJson = null;
 
 function getTimestamp(){
-    d = new Date();
-    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");
-    return ts;
-}
+    date = new Date();
+    return date.toLocaleDateString() + " " + date.toLocaleTimeString();    
+};
 
 function deleteNamespace(ns){
 
