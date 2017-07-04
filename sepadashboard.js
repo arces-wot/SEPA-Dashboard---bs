@@ -341,16 +341,12 @@ function query(){
 	contentType: "application/sparql-query",
 	data: getNamespaces() + queryText,	
 	error: function(event){
-	    d = new Date();
-	    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");	    
 	    console.log("[DEBUG] Connection failed!");
-	    document.getElementById("queryPanelFooter").innerHTML = "[" + ts + "] Query request failed";
+	    document.getElementById("queryPanelFooter").innerHTML = "[" + getTimestamp() + "] Query request failed";
 	    return false;
 	},
 	success: function(data){
-	    d = new Date();
-	    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");
-	    document.getElementById("queryPanelFooter").innerHTML = "[" + ts + "] Query request successful";
+	    document.getElementById("queryPanelFooter").innerHTML = "[" + getTimestamp() + "] Query request successful";
 
 	    // get the table to fill
 	    table = document.getElementById("queryTable");
@@ -398,16 +394,12 @@ function update(){
 	contentType: "application/sparql-update",
 	data: getNamespaces() + updateText,	
 	error: function(event){
-	    d = new Date();
-	    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");
 	    console.log("[DEBUG] Connection failed!");
-	    document.getElementById("updatePanelFooter").innerHTML = "[" + ts + "] Update request failed";
+	    document.getElementById("updatePanelFooter").innerHTML = "[" + getTimestamp() + "] Update request failed";
 	    return false;
 	},
 	success: function(data){
-	    d = new Date();
-	    ts = d.toLocaleFormat("%y/%m/%d %H:%M:%S");
-	    document.getElementById("updatePanelFooter").innerHTML = "[" + ts + "] Update request successful";
+	    document.getElementById("updatePanelFooter").innerHTML = "[" + getTimestamp() + "] Update request successful";
 	}
     });
    
