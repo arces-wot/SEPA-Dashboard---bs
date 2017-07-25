@@ -122,7 +122,7 @@ function loadJsap(){
 	    
 		// load queries
 		ul = document.getElementById("queryDropdown");
-		for (q in myJson["subscribes"]){
+		for (q in myJson["queries"]){
 			li = document.createElement("li");			
 			li.setAttribute("id", q);
 			li.innerHTML = q;
