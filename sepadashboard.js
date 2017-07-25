@@ -130,9 +130,9 @@ function loadJsap(){
 			li.setAttribute("data-toggle", "modal");
 			li.setAttribute("data-target", "#basicModal");	
 			ul.appendChild(li);
-		}
+		};
 	    
-	    // load updates
+	        // load updates
 		ul = document.getElementById("updateDropdown");
 		for (q in myJson["updates"]){
 			li = document.createElement("li");			
@@ -142,7 +142,7 @@ function loadJsap(){
 			li.setAttribute("data-toggle", "modal");
 			li.setAttribute("data-target", "#basicModal");			
 			ul.appendChild(li);
-		}
+		};
 		
 	};
 	fr.readAsText(file);	
@@ -200,11 +200,11 @@ function loadUpdateQuery(u, uqname){
 	} else {
 		
 		// get the query content from JSAP	
-		document.getElementById("queryTextInput").value = myJson["subscribes"][uqname]["sparql"];
+		document.getElementById("queryTextInput").value = myJson["queries"][uqname]["sparql"];
 		
-		if ("forcedBindings" in myJson["subscribes"][uqname]){
-			console.log(Object.keys(myJson["subscribes"][uqname]["forcedBindings"]).length);
-			if (Object.keys(myJson["subscribes"][uqname]["forcedBindings"]).length > 0){
+		if ("forcedBindings" in myJson["queries"][uqname]){
+			console.log(Object.keys(myJson["queries"][uqname]["forcedBindings"]).length);
+			if (Object.keys(myJson["queries"][uqname]["forcedBindings"]).length > 0){
 			
 				// now put the forced bindings variables into the form
 				form = document.getElementById("fbForm");			
@@ -216,11 +216,11 @@ function loadUpdateQuery(u, uqname){
 				document.getElementById("forcedBindingsHeader").innerHTML = "query:" + uqname;
 			
 				// prepare the content of the form
-				for (fb in myJson["subscribes"][uqname]["forcedBindings"]){				
+				for (fb in myJson["queries"][uqname]["forcedBindings"]){				
 							
 					// add a label				
 					linput = document.createElement("label");
-					linput.innerHTML = fb + " (" + myJson["subscribes"][uqname]["forcedBindings"][fb]["type"] + ")";
+					linput.innerHTML = fb + " (" + myJson["queries"][uqname]["forcedBindings"][fb]["type"] + ")";
 					form.appendChild(linput);
 					
 					// add the entry field			
