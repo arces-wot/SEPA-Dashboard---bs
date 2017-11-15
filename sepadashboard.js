@@ -535,7 +535,9 @@ function subscribe(){
 
 	// delete the subscription from the local array
 	delete openSubscriptions[subid];
-	
+
+	// TODO - delete the subscription from the list
+	var rowIndex = document.getElementById(subid).remove();	
     };
 
 }
