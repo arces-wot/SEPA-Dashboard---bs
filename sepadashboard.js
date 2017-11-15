@@ -438,6 +438,10 @@ function subscribe(){
 	    // get the subscription id
 	    subid = msg["subscribed"];
 	    subal = msg["alias"];
+	    if (subal === ""){
+		d = new Date ();
+		subal = "autogen_" + d.getTime();
+	    }
 	    
 	    // store the subid
 	    table = document.getElementById("subidTable");
