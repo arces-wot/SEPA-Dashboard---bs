@@ -453,6 +453,49 @@ function subscribe(){
 	    // put a message in the footer
 	    document.getElementById("submanPanelFooter").innerHTML = "[" + getTimestamp() + "] subscription " + subal + " confirmed";
 	    document.getElementById("queryPanelFooter").innerHTML = "[" + getTimestamp() + "] subscription " + subal + " confirmed";
+
+	    // get the table for added and removed results
+	    at = document.getElementById("addedTable");
+	    dt = document.getElementById("deletedTable");
+	    console.log(msg);
+	    
+	    // iterate over the variables and add them
+	    // to the array if not present
+	    for (v in msg["firstResults"]["head"]["vars"]){
+		if (!(notifCols.includes(msg["firstResults"]["head"]["vars"][v]))){
+		    
+		    // add the column to the list
+		    notifCols.push(msg["firstResults"]["head"]["vars"][v]);
+
+		    // add the column to the added and removed tables
+		    at.rows[0].insertCell(-1).outerHTML = "<th>?" + msg["firstResults"]["head"]["vars"][v] + "</th>";
+		    dt.rows[0].insertCell(-1).outerHTML = "<th>?" + msg["firstResults"]["head"]["vars"][v] + "</th>";
+		}
+	    }
+
+	    // iterate over the ADDED bindings to fill the table
+	    for (r in msg["firstResults"]["results"]["bindings"]){
+
+		// create a new row with the right number of fields	
+		newRow = at.insertRow(-1);
+		for (var nf=0; nf <= notifCols.length; nf++){
+		    newRow.insertCell(-1);
+		}
+
+		// put the Sub ID into the first column
+		newRow.cells[0].innerHTML = msg["subscribed"];
+		
+		// iterate over the fields
+		for (f in msg["firstResults"]["results"]["bindings"][r]){
+
+		    // get the index of the column
+		    console.log(f);
+		    iv = notifCols.indexOf(f);
+		    newRow.cells[iv + 1].innerHTML = msg["firstResults"]["results"]["bindings"][r][f]["value"];
+		}
+		
+	    }
+	    
 	    
 	} else if ("results" in msg)  {
 
