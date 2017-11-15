@@ -17,7 +17,7 @@ function deleteNamespace(ns){
 
     // add message to the footer
     document.getElementById("nsPanelFooter").innerHTML = "[" + getTimestamp() + "] prefix " + ns + " deleted";
-   
+    
 };
 
 function addNamespace(){
@@ -88,7 +88,7 @@ function loadJsap(){
 	    
 	    // parse the JSON file
 	    myJson = JSON.parse(decodedData);
-	      
+	    
 	    // get the namespaces table
 	    table = document.getElementById("namespacesTable");
 	    
@@ -103,7 +103,6 @@ function loadJsap(){
 		}
 		
 		// add the new item
-		console.log(ns);
 		newRow = table.insertRow(-1);
 		newRow.id = ns;
 		newRow.insertCell(0).innerHTML = ns;
@@ -120,30 +119,30 @@ function loadJsap(){
 	    sURI = "ws://" + myJson["parameters"]["host"] + ":" + myJson["parameters"]["ports"]["ws"] + myJson["parameters"]["paths"]["subscribe"];
 	    document.getElementById("subscribeUriInput").value = sURI;    
 	    
-		// load queries
-		ul = document.getElementById("queryDropdown");
-		for (q in myJson["queries"]){
-			li = document.createElement("li");			
-			li.setAttribute("id", q);
-			li.innerHTML = q;
-			li.setAttribute("onclick", "javascript:loadUpdateQuery(false, '" + q + "');");
-			li.setAttribute("data-toggle", "modal");
-			li.setAttribute("data-target", "#basicModal");	
-			ul.appendChild(li);
-		};
+	    // load queries
+	    ul = document.getElementById("queryDropdown");
+	    for (q in myJson["queries"]){
+		li = document.createElement("li");			
+		li.setAttribute("id", q);
+		li.innerHTML = q;
+		li.setAttribute("onclick", "javascript:loadUpdateQuery(false, '" + q + "');");
+		li.setAttribute("data-toggle", "modal");
+		li.setAttribute("data-target", "#basicModal");	
+		ul.appendChild(li);
+	    };
 	    
-	        // load updates
-		ul = document.getElementById("updateDropdown");
-		for (q in myJson["updates"]){
-			li = document.createElement("li");			
-			li.setAttribute("id", q);
-			li.innerHTML = q;
-			li.setAttribute("onclick", "javascript:loadUpdateQuery(true, '" + q + "');");		
-			li.setAttribute("data-toggle", "modal");
-			li.setAttribute("data-target", "#basicModal");			
-			ul.appendChild(li);
-		};
-		
+	    // load updates
+	    ul = document.getElementById("updateDropdown");
+	    for (q in myJson["updates"]){
+		li = document.createElement("li");			
+		li.setAttribute("id", q);
+		li.innerHTML = q;
+		li.setAttribute("onclick", "javascript:loadUpdateQuery(true, '" + q + "');");		
+		li.setAttribute("data-toggle", "modal");
+		li.setAttribute("data-target", "#basicModal");			
+		ul.appendChild(li);
+	    };
+	    
 	};
 	fr.readAsText(file);	
     }
@@ -154,89 +153,103 @@ function loadJsap(){
 };
 
 function loadUpdateQuery(u, uqname){
-	
-	// check the value of u
-	// u === true -> update
-	// u === false -> query/sub
-	
-	if (u){		
-		// get the update content from JSAP					
-		document.getElementById("updateTextInput").value = myJson["updates"][uqname]["sparql"];						
+    
+    // check the value of u
+    // u === true -> update
+    // u === false -> query/sub
+    
+    if (u){		
+	// get the update content from JSAP					
+	document.getElementById("updateTextInput").value = myJson["updates"][uqname]["sparql"];						
 
-		if ("forcedBindings" in myJson["updates"][uqname]){
-			console.log(Object.keys(myJson["updates"][uqname]["forcedBindings"]).length);
-			if (Object.keys(myJson["updates"][uqname]["forcedBindings"]).length > 0){
-			
-				// now put the forced bindings variables into the form
-				form = document.getElementById("fbForm");			
-			
-				// remove old elements		
-				form.innerHTML = "";
-							
-				// set the title of the form 
-				document.getElementById("forcedBindingsHeader").innerHTML = "update:" + uqname;
-			
-				// prepare the content of the form
-				for (fb in myJson["updates"][uqname]["forcedBindings"]){				
-							
-					// add a label				
-					linput = document.createElement("label");
-					linput.innerHTML = fb + " (" + myJson["updates"][uqname]["forcedBindings"][fb]["type"] + ")";
-					form.appendChild(linput);
-					
-					// add the entry field			
-					input = document.createElement("input");
-					input.type = "text";
-					input.setAttribute("id", fb);
-					input.setAttribute("placeholder", "?" + fb);
-					input.setAttribute("class", "form-control");
-					form.appendChild(input);
-					form.appendChild(document.createElement("br"));									
-					
-				};
-			};
-		};
+	// get the form, set the title and remove old elements		
+	form = document.getElementById("fbForm");
+	document.getElementById("forcedBindingsHeader").innerHTML = "update:" + uqname;
+	form.innerHTML = "";
+	
+	if ("forcedBindings" in myJson["updates"][uqname]){
+	    console.log(Object.keys(myJson["updates"][uqname]["forcedBindings"]).length);
+	    if (Object.keys(myJson["updates"][uqname]["forcedBindings"]).length > 0){
 		
+		// prepare the content of the form
+		for (fb in myJson["updates"][uqname]["forcedBindings"]){				
+		    
+		    // add a label				
+		    linput = document.createElement("label");
+		    linput.innerHTML = fb + " (" + myJson["updates"][uqname]["forcedBindings"][fb]["type"] + ")";
+		    form.appendChild(linput);
+		    
+		    // add the entry field			
+		    input = document.createElement("input");
+		    input.type = "text";
+		    input.setAttribute("id", fb);
+		    input.setAttribute("placeholder", "?" + fb);
+		    input.setAttribute("class", "form-control");
+		    form.appendChild(input);
+		    form.appendChild(document.createElement("br"));									
+		    
+		};
+	    }
+	    else {
+		// add a label				
+		linput = document.createElement("label");
+		linput.innerHTML = "No forced bindings for this update";
+		form.appendChild(linput);
+	    };
 	} else {
+	    // add a label				
+	    linput = document.createElement("label");
+	    linput.innerHTML = "No forced bindings for this update";
+	    form.appendChild(linput);
+	};
+	
+    } else {
+	
+	// get the query content from JSAP	
+	document.getElementById("queryTextInput").value = myJson["queries"][uqname]["sparql"];
+
+	// get the form, set the title and remove old elements		
+	form = document.getElementById("fbForm");
+	document.getElementById("forcedBindingsHeader").innerHTML = "query:" + uqname;
+	form.innerHTML = "";
+	
+	if ("forcedBindings" in myJson["queries"][uqname]){
+	    
+	    if (Object.keys(myJson["queries"][uqname]["forcedBindings"]).length > 0){
 		
-		// get the query content from JSAP	
-		document.getElementById("queryTextInput").value = myJson["queries"][uqname]["sparql"];
-		
-		if ("forcedBindings" in myJson["queries"][uqname]){
-			console.log(Object.keys(myJson["queries"][uqname]["forcedBindings"]).length);
-			if (Object.keys(myJson["queries"][uqname]["forcedBindings"]).length > 0){
-			
-				// now put the forced bindings variables into the form
-				form = document.getElementById("fbForm");			
-			
-				// remove old elements		
-				form.innerHTML = "";
-							
-				// set the title of the form 
-				document.getElementById("forcedBindingsHeader").innerHTML = "query:" + uqname;
-			
-				// prepare the content of the form
-				for (fb in myJson["queries"][uqname]["forcedBindings"]){				
-							
-					// add a label				
-					linput = document.createElement("label");
-					linput.innerHTML = fb + " (" + myJson["queries"][uqname]["forcedBindings"][fb]["type"] + ")";
-					form.appendChild(linput);
-					
-					// add the entry field			
-					input = document.createElement("input");
-					input.type = "text";
-					input.setAttribute("id", fb);
-					input.setAttribute("placeholder", "?" + fb);
-					input.setAttribute("class", "form-control");
-					form.appendChild(input);
-					form.appendChild(document.createElement("br"));									
-					
-				};
-			};
+		// prepare the content of the form
+		for (fb in myJson["queries"][uqname]["forcedBindings"]){
+		    
+		    // add a label				
+		    linput = document.createElement("label");
+		    linput.innerHTML = fb + " (" + myJson["queries"][uqname]["forcedBindings"][fb]["type"] + ")";
+		    form.appendChild(linput);
+		    
+		    // add the entry field			
+		    input = document.createElement("input");
+		    input.type = "text";
+		    input.setAttribute("id", fb);
+		    input.setAttribute("placeholder", "?" + fb);
+		    input.setAttribute("class", "form-control");
+		    form.appendChild(input);
+		    form.appendChild(document.createElement("br"));									
+		    
 		};
-		
+	    }
+	    else {		
+		// add a label				
+		linput = document.createElement("label");
+		linput.innerHTML = "No forced bindings for this query";
+		form.appendChild(linput);
+	    };	    
 	}
+	else {		
+	    // add a label				
+	    linput = document.createElement("label");
+	    linput.innerHTML = "No forced bindings for this query";
+	    form.appendChild(linput);
+	};	
+    };
 };
 
 function clr(w){
@@ -303,7 +316,7 @@ function clr(w){
 	
 	break;
 	
-	case "all":
+    case "all":
 	
 	// clear all the fields
 	document.getElementById("updateTextInput").value = "";
@@ -372,7 +385,7 @@ function query(){
 	    };	    
 	}
     });
-   
+    
 };
 
 function update(){
@@ -402,7 +415,7 @@ function update(){
 	    document.getElementById("updatePanelFooter").innerHTML = "[" + getTimestamp() + "] Update request successful";
 	}
     });
-   
+    
 };
 
 function subscribe(){
@@ -418,11 +431,17 @@ function subscribe(){
 
     // open a websocket
     var ws = new WebSocket(subscribeURI);
+
+    ws.onerror = function(){
+	console.log("ERROR");
+	subid = null;
+    };
+    
     ws.onopen = function(){
 
 	// generate an alias
 	alias = document.getElementById("subscriptionAlias").value;
-	    
+	
 	// send subscription
 	ws.send(JSON.stringify({"subscribe":subscribeText, "alias":alias}));
     };
@@ -574,17 +593,30 @@ function subscribe(){
     ws.onclose = function(event){
 
 	// debug print
-	console.log("[DEBUG] Subscription " + subid + " closed.");
+	if (subid !== null){
 
-	// put a message in the footer
-	document.getElementById("queryPanelFooter").innerHTML = "[" + getTimestamp() + "] subscription " + subid + " closed";
-	document.getElementById("submanPanelFooter").innerHTML = "[" + getTimestamp() + "] subscription " + subid + " closed";
+	    // console output
+	    console.log("[DEBUG] Subscription " + subid + " closed.");
+	    
+	    // put a message in the footer
+	    document.getElementById("queryPanelFooter").innerHTML = "[" + getTimestamp() + "] subscription " + subid + " closed";
+	    document.getElementById("submanPanelFooter").innerHTML = "[" + getTimestamp() + "] subscription " + subid + " closed";
 
-	// delete the subscription from the local array
-	delete openSubscriptions[subid];
+	    // delete the subscription from the local array
+	    delete openSubscriptions[subid];
 
-	// TODO - delete the subscription from the list
-	var rowIndex = document.getElementById(subid).remove();	
+	    // delete the subscription from the list	    
+	    var rowIndex = document.getElementById(subid).remove();
+	    
+	} else {
+	    
+	    console.log("[DEBUG] Websocket closed");
+
+	    // put a message in the footer
+	    document.getElementById("queryPanelFooter").innerHTML = "[" + getTimestamp() + "] websocket closed";
+	    document.getElementById("submanPanelFooter").innerHTML = "[" + getTimestamp() + "] websocket closed";
+
+	}
     };
 
 }
@@ -615,7 +647,7 @@ function getNamespaces(){
 
     // return
     return ns;
-       
+    
 };
 
 function aboutUs(){
@@ -623,41 +655,42 @@ function aboutUs(){
 }
 
 function parseForcedBindings(){
+    
+    // debug print
+    console.log("[DEBUG] function parseForcedBindings invoked");
+    
+    // find if it is a query or an update and its name
+    u = document.getElementById("forcedBindingsHeader").innerHTML.split(":")[0];
+    uqname = document.getElementById("forcedBindingsHeader").innerHTML.split(":")[1];
+    uqtext = null;
+
+    if (u === "update"){
+	uqtext = myJson["updates"][uqname]["sparql"];
+    } else {
+	uqtext = myJson["queries"][uqname]["sparql"];
+    };
+    
+    // read values from form
+    form = document.getElementById("fbForm");
+    els = form.getElementsByTagName('input');			
+    for (var c=0; c < els.length; c++){
 	
-	// debug print
-	console.log("[DEBUG] function parseForcedBindings invoked");
-	
-	// find if it is a query or an update and its name
-	u = document.getElementById("forcedBindingsHeader").innerHTML.split(":")[0];
-	uqname = document.getElementById("forcedBindingsHeader").innerHTML.split(":")[1];	
-	uqtext = null;
-	if (u === "update"){
-		uqtext = myJson["updates"][uqname]["sparql"];
-	} else {
-		uqtext = myJson["subscribes"][uqname]["sparql"];
-	};
-	
-	// read values from form
-	form = document.getElementById("fbForm");
-	els = form.getElementsByTagName('input');			
-	for (var c=0; c < els.length; c++){
-		
-		// build a regexp for the substitution
-		varname = els[c].placeholder;
-		varvalue = els[c].value;
-		r = new RegExp('\\?' + varname.substring(1) + '\\s+', 'g');
-		uqtext = uqtext.replace(r, varvalue + " ");				
-	};	
-	
-	// fill the query/update textbox
-	if (u === "update"){
-		document.getElementById("updateTextInput").value = uqtext;					
-	} else {
-		document.getElementById("queryTextInput").value = uqtext;
-	};
-		
-	// close the popup
-	$("#basicModal").modal('hide');
-	
+	// build a regexp for the substitution
+	varname = els[c].placeholder;
+	varvalue = els[c].value;
+	r = new RegExp('\\?' + varname.substring(1) + '\\s+', 'g');
+	uqtext = uqtext.replace(r, varvalue + " ");				
+    };	
+    
+    // fill the query/update textbox
+    if (u === "update"){
+	document.getElementById("updateTextInput").value = uqtext;					
+    } else {
+	document.getElementById("queryTextInput").value = uqtext;
+    };
+    
+    // close the popup
+    $("#basicModal").modal('hide');
+    
 };
 
