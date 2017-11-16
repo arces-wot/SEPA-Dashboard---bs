@@ -674,12 +674,14 @@ function parseForcedBindings(){
     form = document.getElementById("fbForm");
     els = form.getElementsByTagName('input');			
     for (var c=0; c < els.length; c++){
-	
+
 	// build a regexp for the substitution
 	varname = els[c].placeholder;
 	varvalue = els[c].value;
 	r = new RegExp('\\?' + varname.substring(1) + '\\s+', 'g');
-	uqtext = uqtext.replace(r, varvalue + " ");				
+	uqtext = uqtext.replace(r, varvalue + " ");
+	r = new RegExp('\\?' + varname.substring(1) + '\\.', 'g');
+	uqtext = uqtext.replace(r, varvalue + ". ");
     };	
     
     // fill the query/update textbox
