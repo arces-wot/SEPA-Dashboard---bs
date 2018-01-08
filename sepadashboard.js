@@ -627,10 +627,13 @@ function unsubscribe(subid){
     console.log("[DEBUG] function unsubscribe invoked");
 
     // close the websocket
-    openSubscriptions[subid].close();
+    openSubscriptions[subid].send(JSON.stringify({"unsubscribe":subid}));
 
     // delete the row from table
     document.getElementById(subid).remove();
+
+    // delete local entry in memory
+    delete openSubscriptions[subid];
 
 }
 
