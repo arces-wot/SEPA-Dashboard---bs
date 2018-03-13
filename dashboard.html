@@ -10,15 +10,11 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <!-- jquery -->
-    <script src="jquery-3.2.1/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="bootstrap-4.0.0-beta.2/dist/css/bootstrap.min.css">
+    <script src="jquery-3.3.1.min.js"></script>
+    <script src="bootstrap-4.0.0-beta.2/assets/js/vendor/popper.min.js"></script>
+    <script src="bootstrap-4.0.0-beta.2/dist/js/bootstrap.min.js"></script>
     
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
-    
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-
     <!-- Sepa dashboard -->
     <script type="text/javascript" src="sepadashboard.js"></script>
     
@@ -27,244 +23,317 @@
   <body onload="javascript:clr('all');">
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-inverse">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <div class="navbar-brand">SEPA Dashboard</div>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">      
-        </div><!--/.nav-collapse -->
-      </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark text-white">
+      <div class="navbar-brand">SEPA Dashboard</div>
     </nav>
-
+    
     <!-- MAIN CONTAINER -->
-    <div class="container">
+    <div class="container-fluid">
 
-      <!-- JSAP -->
-      <div class="panel panel-primary">
-	<div class="panel-heading">
-	  JSAP File
-	</div>
-	<div class="panel-body">
+      <!-- ROW 1 -->
+      <div class="row">
 
-	  <div class="row">
-	    <div class="col-lg-6">
-	      <div class="input-group">
-		<input type="file" class="btn" id="loadJsap">
-	      </div>
-	    </div>
-	    <div class="col-lg-6">
-	      <div class="input-group">
-		<button type="button" class="btn btn-primary" id="loadJsapButton" onclick="javascript:loadJsap();">Load JSAP</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>
-	<div class="panel-footer small" id="jsapPanelFooter">	    
-	</div>
-      </div>
+	<!-- COL -->
+	<div class="col p-0 m-2">
 
-      
-      <!-- CONNECTION PARAMETERS -->
-      <div class="panel panel-primary">
-	<div class="panel-heading">
-	  Connection Parameters
-	</div>
-	<div class="panel-body">
-	  <div class="input-group input-group-sm">
-	    <span class="input-group-addon" id="basic-addon1">Update URL</span>
-	    <input type="text" class="form-control" placeholder="http://wot.arces.unibo.it:8000/update" aria-describedby="basic-addon1" id="updateUriInput">
-	  </div>
-	  <br>
-	  <div class="input-group input-group-sm">
-	    <span class="input-group-addon" id="basic-addon1">Query URL</span>
-	    <input type="text" class="form-control" placeholder="http://wot.arces.unibo.it:8000/query" aria-describedby="basic-addon1" id="queryUriInput">
-	  </div>
-	  <br>
-	  <div class="input-group input-group-sm">
-	    <span class="input-group-addon" id="basic-addon1">Subscribe URL</span>
-	    <input type="text" class="form-control" placeholder="ws://wot.arces.unibo.it:9000/subscribe" aria-describedby="basic-addon1" id="subscribeUriInput">
-	  </div>
-	</div>
-	<div class="panel-footer small" id="connectionPanelFooter">	    
-	</div>
-      </div>
-	
-	<!-- FORM FOR FORCED BINDINGS -->
-	<div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">				
-				<h4 class="modal-title" id="forcedBindingsHeader"></h4>
-			</div>
-            <div class="modal-body">                
-				<form id="fbForm">			
-				</form>				
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="javascript:parseForcedBindings();" id="fbFormSaveBtn">Save changes</button>
-			</div>
-		</div>
-	</div>
-	</div>
-
-      <!-- NAMESPACES -->
-      <div class="panel panel-primary">
-	<div class="panel-heading">Namespaces</div>
-	<div class="panel-body">
-
-	  <form class="form-inline small">
-	    <div class="form-group">
-	      <label>Prefix:</label>
-	      <input type="text" class="form-control" id="prefixField">
-	    </div>
-	    <div class="form-group">
-	      <label>Namespace:</label>
-	      <input type="text" class="form-control" id="namespaceField">
-	    </div>
-	    <button type="button" class="btn btn-primary" onclick="javascript:addNamespace();">Add/Edit</button>	    
-	  </form>
-	  
-	  <table class="table table-bordered table-hover table-condensed small" id="namespacesTable">
-	    <tr><th>Prefix</th><th>Namespace</th><th>Actions</th></tr>
-	  </table>
-	</div>
-	<div class="panel-footer small" id="nsPanelFooter">	    
-	</div>
-	</div>
-	
-	<!-- UPDATE -->
-	<div class="panel panel-primary" id="updatePanel">
-	  <div class="panel-heading">Update</div>
-	  <div class="panel-body">
+	  <!-- CARD GROUP -->
+	  <div class="card-group">	    
 	    
-	    <!-- UPDATE TEXT -->
-	    <form>
-	      <div class="form-group">
-		<div class="dropdown">
-		  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">			
-		    Saved Updates<span class="caret"></span>
-		  </button>
-		  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="updateDropdown">
-		  </ul>
+	    <!-- CARD JSAP -->
+	    <div class="card border border-primary rounded-3 m-1 mt-0">
+	      <div class="card-header text-white bg-primary rounded-0 font-weight-light">Load JSAP</div>
+	      <div class="card-body">
+	  	<div class="form-group">
+		  <div class="btn-group">
+	            <input type="file" class="btn" id="loadJsap">
+	  	  </div>
+	  	  <div class="form-group">
+	  	    <button type="button" class="btn btn-primary btn-sm" id="loadJsapButton" onclick="javascript:loadJsap();">Load JSAP</button>
+	  	  </div>
 		</div>
 	      </div>
-	      
-	      <div class="form-group">
-		<label for="updateInput">SPARQL Update</label>
-		<textarea class="form-control" id="updateTextInput"></textarea>
+	      <div class="card-footer font-weight-light" id="jsapPanelFooter">
+	  	<small>Load JSAP files to access stored URIs, namespaces, queries and updates.</small>
 	      </div>
-
-	      <div class="form-group">
-		<label>History</label>
-		<div id="updHist1" onclick="javascript:loadFromHistory('updHist1', false);"></div>
-		<div id="updHist2" onclick="javascript:loadFromHistory('updHist2', false);"></div>
-		<div id="updHist3" onclick="javascript:loadFromHistory('updHist3', false);"></div>
-		<div id="updHist4" onclick="javascript:loadFromHistory('updHist4', false);"></div>
-		<div id="updHist5" onclick="javascript:loadFromHistory('updHist5', false);"></div>
-	      </div>
-	      
-	      <button type="button" class="btn btn-primary" onclick="javascript:update();">Submit</button>
-	      <button type="button" class="btn btn-primary" onclick="javascript:clr('update');">Clear</button>
-	     </form>
+	    </div>
+	    <!-- END CARD JSAP -->
 	    
-	  </div>
-	  <div class="panel-footer small" id="updatePanelFooter">
-	  </div>
-	</div>
+	    <!-- CARD CONNECTION -->
+	    <div class="card border border-primary rounded-3 m-1 mt-0">
+	      <div class="card-header text-white bg-primary rounded-0 font-weight-light">Connection Parameters</div>
+	      <div class="card-body">
+      	        <div class="form-group input-group-sm">
+      	    	  <span class="input-group-addon" id="basic-addon1">Update URL</span>
+      	    	  <input type="text" class="form-control" placeholder="http://wot.arces.unibo.it:8000/update" aria-describedby="basic-addon1" id="updateUriInput">		  
+      	        </div>
+      	        <br>
+      	        <div class="form-group input-group-sm">
+      	    	  <span class="input-group-addon" id="basic-addon1">Query URL</span>
+      	    	  <input type="text" class="form-control" placeholder="http://wot.arces.unibo.it:8000/query" aria-describedby="basic-addon1" id="queryUriInput">
+      	        </div>
+      	        <br>
+      	        <div class="form-group input-group-sm">
+      	    	  <span class="input-group-addon" id="basic-addon1">Subscribe URL</span>
+      	    	  <input type="text" class="form-control" placeholder="ws://wot.arces.unibo.it:9000/subscribe" aria-describedby="basic-addon1" id="subscribeUriInput">
+      	        </div>
+	      </div>
+	      <div class="card-footer font-weight-light" id="connectionPanelFooter">
+	        <small>URIs of the SEPA instance</small>
+	      </div>
+	    </div>
+	    <!-- END CARD CONNECTION -->
 
-	<!-- QUERY -->
-	<div class="panel panel-primary" id="queryPanel">
-	  <div class="panel-heading">Query/Subscriptions</div>
-	  <div class="panel-body">
+	    <!-- CARD NAMESPACES -->
+	    <div class="card border border-primary rounded-3 m-1 mt-0">
+	      <div class="card-header text-white bg-primary rounded-0 font-weight-light">Namespaces</div>
+      	      <div class="card-body">
+      		<form class="form small">
 		  
-		<!-- SAVED QUERIES -->		
-		<div class="dropdown">
-		  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">			
-		    Saved Queries<span class="caret"></span>
-		  </button>
-		  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="queryDropdown">
-		  </ul>
-		</div>
+	  	  <div class="form-group">
+      	  	    <label>Prefix:</label>
+      	  	    <input type="text" class="form-control" id="prefixField">
+      	  	  </div>
+		  
+      	  	  <div class="form-group">
+      	  	    <label>Namespace:</label>
+      	  	    <input type="text" class="form-control" id="namespaceField">
+      	  	  </div>
+		  
+      	  	  <button type="button" class="btn btn-primary btn-sm" onclick="javascript:addNamespace();">Add/Edit</button>
+      		</form>
 		<br>
-			
-	<!-- FORM FOR QUERIES -->
-	     <form>
-	       <div class="form-group">
-		 <label for="queryInput">SPARQL Query</label>
-		 <textarea class="form-control" id="queryTextInput">SELECT ?s ?p ?o WHERE { ?s ?p ?o }</textarea>
-	       </div>
-	       <div class="form-group">
-		 <label for="queryInput">SPARQL Subscription Alias</label>
-		 <input type="text" class="form-control" placeholder="alias" aria-describedby="basic-addon1" id="subscriptionAlias">
-	       </div>
-	       <div class="form-group">
-		 <label for="queryInput">History</label>
-		 <div id="queryHist1" onclick="javascript:loadFromHistory('queryHist1', true);"></div>
-		 <div id="queryHist2" onclick="javascript:loadFromHistory('queryHist2', true);"></div>
-		 <div id="queryHist3" onclick="javascript:loadFromHistory('queryHist3', true);"></div>
-		 <div id="queryHist4" onclick="javascript:loadFromHistory('queryHist4', true);"></div>
-		 <div id="queryHist5" onclick="javascript:loadFromHistory('queryHist5', true);"></div>
-	       </div>
-	       <button type="button" class="btn btn-primary" onclick="javascript:query();">Query</button>
-	       <button type="button" class="btn btn-primary" onclick="javascript:subscribe();">Subscribe</button>
-	     </form>
-	  </div>
-	  <div class="panel-footer small" id="queryPanelFooter">	    
-	  </div>
-	  </div>
-
-	<div class="panel panel-primary">
-	  <div class="panel-heading">Query Results</div>
-	  <div class="panel-body">
-	    <table class="table table-bordered table-hover table-condensed small" id="queryTable">
-	    </table>
-	    <button type="button" class="btn btn-primary" onclick="javascript:clr('queryResults');">Clear</button>
-	  </div>
-	  <div class="panel-footer small" id="queryPanelFooter">	    
+      		<table class="table table-bordered table-hover table-condensed small" id="namespacesTable">
+      	  	  <tr><th>Prefix</th><th>Namespace</th><th>Actions</th></tr>
+      		</table>
+      	      </div>
+      	      <div class="card-footer small" id="nsPanelFooter">
+		Namespaces to shorten Queries/Updates
+      	      </div>
+	      <!-- END CARD NAMESPACES -->
+	    </div>
 	  </div>
 	</div>
+      </div>
+      <!-- END ROW 1 -->
 
-	<div class="panel panel-primary">
-	  <div class="panel-heading">Subscription Management</div>
-	  <div class="panel-body">
-	    Active Subscriptions
-	    <table class="table table-bordered table-hover table-condensed small" id="subidTable">
-	      <tr><th>ID</th><th>Alias</th><th>Actions</th></tr>
-	    </table>
-	  </div>
-	  <div class="panel-footer small" id="submanPanelFooter">	    
-	  </div>
-	</div>
+      <!-- ROW 2 -->
+      <div class="row">
 
-	<div class="panel panel-primary">
-	  <div class="panel-heading">Subscription Results</div>
-	  <div class="panel-body">
-	    Added Results
-	    <table class="table table-bordered table-hover table-condensed small" id="addedTable">
-	      <tr><th>Sub ID</th></tr>
-	    </table>
+	
+	<!-- COL -->
+	<div class="col p-0 m-2">
+	  
+	  <!-- FORM FOR FORCED BINDINGS -->
+	  <div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+      	    <div class="modal-dialog">
+      	      <div class="modal-content">
+      	  	<div class="modal-header">
+      	  	  <h4 class="modal-title" id="forcedBindingsHeader"></h4>
+      	  	</div>
+	  	<div class="modal-body">
+      	  	  <form id="fbForm">
+      	  	  </form>
+	  	</div>
+	  	<div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary" onclick="javascript:parseForcedBindings();" id="fbFormSaveBtn">Save changes</button>
+      	  	</div>
+      	      </div>
+      	    </div>
+      	  </div>
+	  
+	  <!-- <\!-- NAMESPACES -\-> -->
+	  <!-- <div class="panel panel-primary"> -->
+      	  <!--   <div class="panel-heading">Namespaces</div> -->
+      	  <!--   <div class="panel-body"> -->
 
-	    Deleted Results
-	    <table class="table table-bordered table-hover table-condensed small" id="deletedTable">
-	      <tr><th>Sub ID</th></tr>
-	    </table>
-	    <button type="button" class="btn btn-primary" onclick="javascript:clr('subTables');">Clear Tables</button>	  
-	  </div>	  
-	  <div class="panel-footer small" id="subresPanelFooter">	    
-	  </div>
+      	  <!--     <form class="form-inline small"> -->
+      	  <!-- 	<div class="form-group"> -->
+      	  <!-- 	  <label>Prefix:</label> -->
+      	  <!-- 	  <input type="text" class="form-control" id="prefixField"> -->
+      	  <!-- 	</div> -->
+      	  <!-- 	<div class="form-group"> -->
+      	  <!-- 	  <label>Namespace:</label> -->
+      	  <!-- 	  <input type="text" class="form-control" id="namespaceField"> -->
+      	  <!-- 	</div> -->
+      	  <!-- 	<button type="button" class="btn btn-primary" onclick="javascript:addNamespace();">Add/Edit</button> -->
+      	  <!--     </form> -->
+	  
+      	  <!--     <table class="table table-bordered table-hover table-condensed small" id="namespacesTable"> -->
+      	  <!-- 	<tr><th>Prefix</th><th>Namespace</th><th>Actions</th></tr> -->
+      	  <!--     </table> -->
+      	  <!--   </div> -->
+      	  <!--   <div class="panel-footer small" id="nsPanelFooter"> -->
+      	  <!--   </div> -->
+      	  <!-- </div> -->
+	  
+      	  <!-- UPDATE -->
+	  <div class="card border border-primary rounded-3 m-1 mt-0">
+	    <div class="card-header text-white bg-primary rounded-0 font-weight-light" id="updatePanel">Update</div>
+	    <div class="card-body">
+      	      <div class="form-group input-group-sm">      	    	
+      		
+      		<!-- UPDATE TEXT -->
+      		<form>
+      		  <div class="form-group">
+		    
+      		    <div class="dropdown">
+      		      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      			Saved Updates<span class="caret"></span>
+      		      </button>
+      		      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="updateDropdown">
+      		      </ul>
+      		    </div>
+      		  </div>
+		  
+      		  <div class="form-group">
+      		    <label for="updateInput">SPARQL Update</label>
+      		    <textarea class="form-control" id="updateTextInput"></textarea>
+      		  </div>
+
+      		  <div class="form-group">
+      		    <label>History</label>
+      		    <div id="updHist1" onclick="javascript:loadFromHistory('updHist1', false);"></div>
+      		    <div id="updHist2" onclick="javascript:loadFromHistory('updHist2', false);"></div>
+      		    <div id="updHist3" onclick="javascript:loadFromHistory('updHist3', false);"></div>
+      		    <div id="updHist4" onclick="javascript:loadFromHistory('updHist4', false);"></div>
+      		    <div id="updHist5" onclick="javascript:loadFromHistory('updHist5', false);"></div>
+      		  </div>
+		  
+      		  <button type="button" class="btn btn-primary" onclick="javascript:update();">Submit</button>
+      		  <button type="button" class="btn btn-primary" onclick="javascript:clr('update');">Clear</button>
+      		</form>
+	      </div>
+      	    </div>
+      	    <div class="card-footer small" id="updatePanelFooter">
+      	    </div>
+      	  </div>
 	  
 	</div>
-	
+      </div>
+      <!-- END OF ROW 2 -->
+      
+      <!-- ROW 3 -->
+      <div class="row">
+
+	<!-- COL -->
+	<div class="col p-0 m-2">
+	  
+	  <!-- CARD QUERY -->
+	  <div class="card border border-primary rounded-3 m-1 mt-0">
+	    <div class="card-header text-white bg-primary rounded-0 font-weight-light" id="queryPanel">Query/Subscription</div>
+	    <div class="card-body">
+	      
+	      <!-- SAVED QUERIES -->
+	      <div class="dropdown">
+	  	<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+	  	  Saved Queries<span class="caret"></span>
+	  	</button>
+	  	<ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="queryDropdown">
+	  	</ul>
+	      </div>
+	      <br>
+	      
+	      <!-- FORM FOR QUERIES -->
+	      <form>
+	  	<div class="form-group">
+	  	  <label for="queryInput">SPARQL Query</label>
+	  	  <textarea class="form-control" id="queryTextInput">SELECT ?s ?p ?o WHERE { ?s ?p ?o }</textarea>
+	  	</div>
+	  	<div class="form-group">
+	  	  <label for="queryInput">SPARQL Subscription Alias</label>
+	  	  <input type="text" class="form-control" placeholder="alias" aria-describedby="basic-addon1" id="subscriptionAlias">
+	  	</div>
+	  	<div class="form-group">
+	  	  <label for="queryInput">History</label>
+	  	  <div id="queryHist1" onclick="javascript:loadFromHistory('queryHist1', true);"></div>
+	  	  <div id="queryHist2" onclick="javascript:loadFromHistory('queryHist2', true);"></div>
+	  	  <div id="queryHist3" onclick="javascript:loadFromHistory('queryHist3', true);"></div>
+	  	  <div id="queryHist4" onclick="javascript:loadFromHistory('queryHist4', true);"></div>
+	  	  <div id="queryHist5" onclick="javascript:loadFromHistory('queryHist5', true);"></div>
+	  	</div>
+	  	<button type="button" class="btn btn-primary" onclick="javascript:query();">Query</button>
+	  	<button type="button" class="btn btn-primary" onclick="javascript:subscribe();">Subscribe</button>
+	      </form>
+	    </div>
+	    <div class="panel-footer small" id="queryPanelFooter">
+	    </div>
+	  </div>
+	</div>
+      </div>
+
+
+      <!-- ROW 4 -->
+      <div class="row">
+
+	<!-- COL -->
+	<div class="col p-0 m-2">
+
+	  
+	  <div class="card border border-primary rounded-3 m-1 mt-0">
+	    <div class="card-header text-white bg-primary rounded-0 font-weight-light" id="queryPanel">Query Results</div>
+	    <div class="card-body">
+	      
+      	      <table class="table table-bordered table-hover table-condensed small" id="queryTable">
+      	      </table>
+      	      <button type="button" class="btn btn-primary" onclick="javascript:clr('queryResults');">Clear</button>
+      	    </div>
+      	    <div class="card-footer small" id="queryPanelFooter">
+      	    </div>
+      	  </div>
+	</div>
+      </div>
+
+      <!-- ROW 5 -->
+      <div class="row">
+
+	<!-- COL -->
+	<div class="col p-0 m-2">
+
+	  
+	  <div class="card border border-primary rounded-3 m-1 mt-0">
+	    <div class="card-header text-white bg-primary rounded-0 font-weight-light" id="queryPanel">Subscription Management</div>
+	    <div class="card-body">
+	      Active Subscriptions
+      	      <table class="table table-bordered table-hover table-condensed small" id="subidTable">
+      		<tr><th>ID</th><th>Alias</th><th>Actions</th></tr>
+      	      </table>
+      	    </div>
+      	    <div class="card-footer small" id="submanPanelFooter">
+      	    </div>
+      	  </div>
+	</div>
+      </div>
+
+      <!-- ROW 6 -->
+      <div class="row">
+
+	<!-- COL -->
+	<div class="col p-0 m-2">
+
+	  
+	  <div class="card border border-primary rounded-3 m-1 mt-0">
+	    <div class="card-header text-white bg-primary rounded-0 font-weight-light" id="queryPanel">Subscription Results</div>
+	    <div class="card-body">
+      	      Added Results
+      	      <table class="table table-bordered table-hover table-condensed small" id="addedTable">
+      		<tr><th>Sub ID</th></tr>
+      	      </table>
+	      
+      	      Deleted Results
+      	      <table class="table table-bordered table-hover table-condensed small" id="deletedTable">
+      		<tr><th>Sub ID</th></tr>
+      	      </table>
+      	      <button type="button" class="btn btn-primary" onclick="javascript:clr('subTables');">Clear Tables</button>	      	      
+	    </div>
+      	    <div class="card-footer small" id="subresPanelFooter">
+      	    </div>
+      	  </div>
+	</div>
+      </div>
+
     </div>
+    <!-- END OF MAIN CONTAINER -->
     
   </body>
-    
 </html>

@@ -127,7 +127,8 @@ function loadJsap(){
 		li.innerHTML = q;
 		li.setAttribute("onclick", "javascript:loadUpdateQuery(false, '" + q + "');");
 		li.setAttribute("data-toggle", "modal");
-		li.setAttribute("data-target", "#basicModal");	
+		li.setAttribute("data-target", "#basicModal");
+		li.classList.add("dropdown-item");
 		ul.appendChild(li);
 	    };
 	    
@@ -139,7 +140,8 @@ function loadJsap(){
 		li.innerHTML = q;
 		li.setAttribute("onclick", "javascript:loadUpdateQuery(true, '" + q + "');");		
 		li.setAttribute("data-toggle", "modal");
-		li.setAttribute("data-target", "#basicModal");			
+		li.setAttribute("data-target", "#basicModal");
+		li.classList.add("dropdown-item");
 		ul.appendChild(li);
 	    };
 	    
