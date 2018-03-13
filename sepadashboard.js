@@ -345,8 +345,22 @@ function query(){
 
     // read the query
     queryText = document.getElementById("queryTextInput").value;    
+
+    // store the query in the history
+    histPrefix = "queryHist";
+    for (i=5; i>1; i--){
+	h1 = document.getElementById(histPrefix + (i-1).toString());
+	h2 = document.getElementById(histPrefix + i.toString());
+	h2.innerHTML = h1.innerHTML;
+	//	h2.addEventListener("click", loadFromHistory);
+	// h2.addEventListener("click", function(){
+	//     field = document.getElementById("queryTextInput");
+	//     field.innerHTML = h2.innerHTML;
+	// }, true);
+    }
+    document.getElementById(histPrefix + "1").innerHTML = queryText;  
     
-    // send the query
+    // send the queryx
     var req = $.ajax({
 	url: queryURI,
 	crossOrigin: true,
@@ -396,8 +410,23 @@ function update(){
     // read the URI
     updateURI = document.getElementById("updateUriInput").value;    
 
-    // read the query
+    // read the update
     updateText = document.getElementById("updateTextInput").value;    
+
+    // store the update in the history
+    histPrefix = "updHist";
+    for (i=5; i>1; i--){
+	h1 = document.getElementById(histPrefix + (i-1).toString());
+	h2 = document.getElementById(histPrefix + i.toString());
+	h2.innerHTML = h1.innerHTML;
+	//	h2.addEventListener("click", loadFromHistory);
+	// h2.addEventListener("click", function(){
+	//     field = document.getElementById("queryTextInput");
+	//     field.innerHTML = h2.innerHTML;
+	// }, true);
+    }
+    document.getElementById(histPrefix + "1").innerHTML = updateText;  
+
     
     // send the update
     var req = $.ajax({
@@ -579,7 +608,7 @@ function subscribe(){
 
 		    // get the index of the column
 		    iv = notifCols.indexOf(f);
-		    newRow.cells(iv + 1).innerHTML = msg["results"]["removedresults"]["bindings"][r][f]["value"];
+		    newRow.cells[iv + 1].innerHTML = msg["results"]["removedresults"]["bindings"][r][f]["value"];
 		}		
 	    }
 	    
@@ -699,3 +728,25 @@ function parseForcedBindings(){
     
 };
 
+function loadFromHistory(historyItem, query){
+
+    console.log(event);
+    
+    // get the HTML field
+    field = null;
+    if (query){
+	field = document.getElementById("queryTextInput");
+    } else {
+	field = document.getElementById("updateTextInput");
+    }
+
+    // get the history item
+    console.log(document.getElementById(historyItem));
+    console.log(document.getElementById(historyItem).innerHTML);
+    hist = document.getElementById(historyItem).innerHTML;
+    console.log(field);
+
+    // put the content in it
+    field.value = hist;
+    
+}

@@ -145,25 +145,32 @@
 	  <div class="panel-heading">Update</div>
 	  <div class="panel-body">
 	    
-	    <!-- SAVED UPDATES -->		
-		<div class="dropdown">
-			<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">			
-			Saved Updates<span class="caret"></span>
-			</button>
-				<ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="updateDropdown">
-				</ul>
-		</div>
-		<br>
-		
-		<!-- FORCED BINDINGS -->
-
-	    
 	    <!-- UPDATE TEXT -->
 	    <form>
+	      <div class="form-group">
+		<div class="dropdown">
+		  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">			
+		    Saved Updates<span class="caret"></span>
+		  </button>
+		  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="updateDropdown">
+		  </ul>
+		</div>
+	      </div>
+	      
 	      <div class="form-group">
 		<label for="updateInput">SPARQL Update</label>
 		<textarea class="form-control" id="updateTextInput"></textarea>
 	      </div>
+
+	      <div class="form-group">
+		<label>History</label>
+		<div id="updHist1" onclick="javascript:loadFromHistory('updHist1', false);"></div>
+		<div id="updHist2" onclick="javascript:loadFromHistory('updHist2', false);"></div>
+		<div id="updHist3" onclick="javascript:loadFromHistory('updHist3', false);"></div>
+		<div id="updHist4" onclick="javascript:loadFromHistory('updHist4', false);"></div>
+		<div id="updHist5" onclick="javascript:loadFromHistory('updHist5', false);"></div>
+	      </div>
+	      
 	      <button type="button" class="btn btn-primary" onclick="javascript:update();">Submit</button>
 	      <button type="button" class="btn btn-primary" onclick="javascript:clr('update');">Clear</button>
 	     </form>
@@ -180,11 +187,11 @@
 		  
 		<!-- SAVED QUERIES -->		
 		<div class="dropdown">
-			<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">			
-			Saved Queries<span class="caret"></span>
-			</button>
-				<ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="queryDropdown">
-				</ul>
+		  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">			
+		    Saved Queries<span class="caret"></span>
+		  </button>
+		  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="queryDropdown">
+		  </ul>
 		</div>
 		<br>
 			
@@ -197,6 +204,14 @@
 	       <div class="form-group">
 		 <label for="queryInput">SPARQL Subscription Alias</label>
 		 <input type="text" class="form-control" placeholder="alias" aria-describedby="basic-addon1" id="subscriptionAlias">
+	       </div>
+	       <div class="form-group">
+		 <label for="queryInput">History</label>
+		 <div id="queryHist1" onclick="javascript:loadFromHistory('queryHist1', true);"></div>
+		 <div id="queryHist2" onclick="javascript:loadFromHistory('queryHist2', true);"></div>
+		 <div id="queryHist3" onclick="javascript:loadFromHistory('queryHist3', true);"></div>
+		 <div id="queryHist4" onclick="javascript:loadFromHistory('queryHist4', true);"></div>
+		 <div id="queryHist5" onclick="javascript:loadFromHistory('queryHist5', true);"></div>
 	       </div>
 	       <button type="button" class="btn btn-primary" onclick="javascript:query();">Query</button>
 	       <button type="button" class="btn btn-primary" onclick="javascript:subscribe();">Subscribe</button>
