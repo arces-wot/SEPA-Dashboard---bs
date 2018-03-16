@@ -54,7 +54,7 @@ function addNamespace(){
 
     // actions cell
     newCell = newRow.insertCell(2);
-    newCell.innerHTML = "<button action='button' class='btn btn-primary btn-sm' onclick='javascript:deleteNamespace(" + '"' + pr + '"' + ");'><span class='glyphicon glyphicon-trash' aria-hidden='true''>&nbsp;</span>Delete</button>";
+    newCell.innerHTML = "<button action='button' class='btn btn-primary btn-sm' onclick='javascript:deleteNamespace(" + '"' + pr + '"' + ");'><small><span class='glyphicon glyphicon-trash' aria-hidden='true''>&nbsp;</span>Delete</small></button>";
 
     // add message to the footer
     document.getElementById("nsPanelFooter").innerHTML = "[" + getTimestamp() + "] new prefix " + pr + " defined";
@@ -107,7 +107,7 @@ function loadJsap(){
 		newRow.id = ns;
 		newRow.insertCell(0).innerHTML = ns;
 		newRow.insertCell(1).innerHTML = myJson["namespaces"][ns];
-		newRow.insertCell(2).innerHTML = "<button action='button' class='btn btn-primary btn-sm' onclick='javascript:deleteNamespace(" + '"' + ns + '"' + ");'><span class='glyphicon glyphicon-trash' aria-hidden='true''>&nbsp;</span>Delete</button>";
+		newRow.insertCell(2).innerHTML = "<button action='button' class='btn btn-primary btn-sm' onclick='javascript:deleteNamespace(" + '"' + ns + '"' + ");'><small><i class='fas fa-trash-alt'></i>&nbsp;</span>Delete</small></button>";
 
 	    }
 
@@ -129,6 +129,7 @@ function loadJsap(){
 		li.setAttribute("data-toggle", "modal");
 		li.setAttribute("data-target", "#basicModal");
 		li.classList.add("dropdown-item");
+		li.classList.add("small");
 		ul.appendChild(li);
 	    };
 	    
@@ -142,6 +143,7 @@ function loadJsap(){
 		li.setAttribute("data-toggle", "modal");
 		li.setAttribute("data-target", "#basicModal");
 		li.classList.add("dropdown-item");
+		li.classList.add("small");
 		ul.appendChild(li);
 	    };
 	    
@@ -346,7 +348,8 @@ function query(){
     queryURI = document.getElementById("queryUriInput").value;    
 
     // read the query
-    queryText = document.getElementById("queryTextInput").value;    
+    queryText = document.getElementById("queryTextInput").value;
+    console.log(queryText);
 
     // store the query in the history
     histPrefix = "queryHist";
