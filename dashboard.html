@@ -61,15 +61,15 @@
 	      <div class="card-header small text-white bg-primary rounded-0 font-weight-light"><i class="fas fa-plug"></i>&nbsp;Connection Parameters</div>
 	      <div class="card-body">
       	        <div class="form-group input-group-sm">
-		  <label for="updateUriInput" class="col-form-label-sm">Update URI</label>
+		  <label for="updateUriInput" class="col-form-label-sm"><b>Update URI</b></label>
       	    	  <input type="text" class="form-control form-control-sm" placeholder="http://wot.arces.unibo.it:8000/update" aria-describedby="basic-addon1" id="updateUriInput">		  
       	        </div>
       	        <div class="form-group input-group-sm">
-		  <label for="queryUriInput" class="col-form-label-sm">Query URI</label>
+		  <label for="queryUriInput" class="col-form-label-sm"><b>Query URI</b></label>
       	    	  <input type="text" class="form-control form-control-sm" placeholder="http://wot.arces.unibo.it:8000/query" aria-describedby="basic-addon1" id="queryUriInput">
       	        </div>
       	        <div class="form-group input-group-sm">
-		  <label for="subscribeUriInput" class="col-form-label-sm">Subscribe URI</label>
+		  <label for="subscribeUriInput" class="col-form-label-sm"><b>Subscribe URI</b></label>
       	    	  <input type="text" class="form-control form-control-sm" placeholder="ws://wot.arces.unibo.it:9000/subscribe" aria-describedby="basic-addon1" id="subscribeUriInput">
       	        </div>
 	      </div>
@@ -78,271 +78,292 @@
 	      </div>
 	    </div>
 	    <!-- END CARD CONNECTION -->
+	  </div>
+	</div>
       </div>
-	  <!-- END ROW 1 -->
+
+      <div class="row">
+	<!-- END ROW 1 -->
 	<!-- COL -->
 	<div class="col p-0 m-2">	  
-	    <!-- CARD NAMESPACES -->
-	    <div class="card border border-primary rounded-3 m-1 mt-0">
-	      <div class="card-header small text-white bg-primary rounded-0 font-weight-light"><i class="fas fa-flag"></i>&nbsp;Namespaces</div>
-      	      <div class="card-body">
-      		<form class="form small">
-		  
-	  	  <div class="form-group">
-      	  	    <label for="prefixField" class="col-form-label-sm">Prefix:</label>
-      	  	    <input type="text" class="form-control form-control-sm" id="prefixField">
-      	  	  </div>
-		  
-      	  	  <div class="form-group">
-		    <label for="namespaceField" class="col-form-label-sm">Namespace:</label>
-      	  	    <input type="text" class="form-control form-control-sm" id="namespaceField">
-      	  	  </div>
+	  <!-- CARD NAMESPACES -->
+	  <div class="card border border-primary rounded-3 m-1 mt-0">
+	    <div class="card-header small text-white bg-primary rounded-0 font-weight-light"><i class="fas fa-flag"></i>&nbsp;Namespaces</div>
+      	    <div class="card-body">
+      	      <form class="form small">
+		
+	  	<div class="form-group">
+      	  	  <label for="prefixField" class="col-form-label-sm">Prefix:</label>
+      	  	  <input type="text" class="form-control form-control-sm" id="prefixField">
+      	  	</div>
+		
+      	  	<div class="form-group">
+		  <label for="namespaceField" class="col-form-label-sm">Namespace:</label>
+      	  	  <input type="text" class="form-control form-control-sm" id="namespaceField">
+      	  	</div>
 
-		  <div class="form-group" align="center">
-      	  	    <button type="button" class="btn btn-primary btn-sm" onclick="javascript:addNamespace();"><small><i class="fas fa-edit"></i>&nbsp;Add/Edit</small></button>
-		  </div>
-      		</form>
-		<br>
-      		<table class="table table-bordered table-hover table-condensed table-sm small" id="namespacesTable">
-      	  	  <tr><th>Prefix</th><th>Namespace</th><th>Actions</th></tr>
-      		</table>
-      	      </div>
-      	      <div class="card-footer small" id="nsPanelFooter"><small><i class="fas fa-info-circle"></i>&nbsp;Namespaces to shorten Queries/Updates</small>
-      	      </div>
-	      <!-- END CARD NAMESPACES -->
-	    </div>
+		<div class="form-group" align="center">
+      	  	  <button type="button" class="btn btn-primary btn-sm" onclick="javascript:addNamespace();"><small><i class="fas fa-edit"></i>&nbsp;Add/Edit</small></button>
+		</div>
+      	      </form>
+	      <br>
+      	      <table class="table table-bordered table-hover table-condensed table-sm small" id="namespacesTable">
+      	  	<tr><th>Prefix</th><th>Namespace</th><th>Actions</th></tr>
+      	      </table>
+      	    </div>
+      	    <div class="card-footer small" id="nsPanelFooter"><small><i class="fas fa-info-circle"></i>&nbsp;Namespaces to shorten Queries/Updates</small>
+      	    </div>
+	    <!-- END CARD NAMESPACES -->
 	  </div>
 	</div>
       </div>
-      <!-- END ROW 1 -->
+    
+    <!-- END ROW 1 -->
 
-      <!-- ROW 2 -->
-      <div class="row">
+    <!-- ROW 2 -->
+    <div class="row">
+
+      	<!-- FORM FOR FORCED BINDINGS -->
+	<div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+      	  <div class="modal-dialog">
+      	    <div class="modal-content">
+      	      <div class="modal-header">
+      	  	<h4 class="modal-title" id="forcedBindingsHeader"></h4>
+      	      </div>
+	      <div class="modal-body">
+      	  	<form id="fbForm">
+      	  	</form>
+	      </div>
+	      <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="javascript:parseForcedBindings();" id="fbFormSaveBtn">Save changes</button>
+      	      </div>
+      	    </div>
+      	  </div>
+      	</div>
+
+	<!-- COL -->
+	<div class="col p-0 m-2">
+	  
+	<!-- <\!-- NAMESPACES -\-> -->
+	<!-- <div class="panel panel-primary"> -->
+      	<!--   <div class="panel-heading">Namespaces</div> -->
+      	<!--   <div class="panel-body"> -->
+
+      	<!--     <form class="form-inline small"> -->
+      	<!-- 	<div class="form-group"> -->
+      	<!-- 	  <label>Prefix:</label> -->
+      	<!-- 	  <input type="text" class="form-control" id="prefixField"> -->
+      	<!-- 	</div> -->
+      	<!-- 	<div class="form-group"> -->
+      	<!-- 	  <label>Namespace:</label> -->
+      	<!-- 	  <input type="text" class="form-control" id="namespaceField"> -->
+      	<!-- 	</div> -->
+      	<!-- 	<button type="button" class="btn btn-primary" onclick="javascript:addNamespace();">Add/Edit</button> -->
+      	<!--     </form> -->
+	
+      	<!--     <table class="table table-bordered table-hover table-condensed small" id="namespacesTable"> -->
+      	<!-- 	<tr><th>Prefix</th><th>Namespace</th><th>Actions</th></tr> -->
+      	<!--     </table> -->
+      	<!--   </div> -->
+      	<!--   <div class="panel-footer small" id="nsPanelFooter"> -->
+      	<!--   </div> -->
+      	<!-- </div> -->
+	
+      	<!-- UPDATE -->
+	<div class="card border border-primary rounded-3 m-1 mt-0">
+	  <div class="card-header small text-white bg-primary rounded-0 font-weight-light" id="updatePanel"><i class="fas fa-pencil-alt"></i>&nbsp;Update</div>
+	  <div class="card-body">
+      	    <div class="form-group input-group-sm">      	    	
+      	      
+      	      <!-- UPDATE TEXT -->
+      	      <form>
+      		<div class="form-group">
+		  
+      		  <div class="dropdown">
+      		    <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      		      Saved Updates<span class="caret"></span>
+      		    </button>
+      		    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="updateDropdown">
+      		    </ul>
+      		  </div>
+      		</div>
+		
+      		<div class="form-group">
+      		  <label for="updateInput" class="col-form-label-sm"><b>SPARQL Update</b></label>
+      		  <textarea class="form-control form-control-sm" id="updateTextInput"></textarea>
+      		</div>
+
+      		<div class="form-group">
+      		  <label class="col-form-label-sm"><b>History</b></label>
+      		  <div id="updHist1" onclick="javascript:loadFromHistory('updHist1', false);"></div>
+      		  <div id="updHist2" onclick="javascript:loadFromHistory('updHist2', false);"></div>
+      		  <div id="updHist3" onclick="javascript:loadFromHistory('updHist3', false);"></div>
+      		  <div id="updHist4" onclick="javascript:loadFromHistory('updHist4', false);"></div>
+      		  <div id="updHist5" onclick="javascript:loadFromHistory('updHist5', false);"></div>
+      		</div>
+
+		<div class="form-group" align="center">
+      		  <button type="button" class="btn btn-primary btn-sm" onclick="javascript:update();"><small><i class="fas fa-share-square"></i>&nbsp;Update</small></button>
+      		  <button type="button" class="btn btn-primary btn-sm" onclick="javascript:clr('update');"><small><i class="fas fa-ban"></i>&nbsp;Clear</small></button>
+		</div>
+      	      </form>
+	    </div>
+      	  </div>
+      	  <div class="card-footer small" id="updatePanelFooter">
+	    <i class="fas fa-info-circle"><small></i>&nbsp;Issue SPARQL Update from this form</small>
+      	  </div>
+      	</div>
+	
+      </div>
+    </div>
+    <!-- END OF ROW 2 -->
+    
+    <!-- ROW 3 -->
+    <div class="row">
+
+      <!-- COL -->
+      <div class="col p-0 m-2">
+	
+	<!-- CARD QUERY -->
+	<div class="card border border-primary rounded-3 m-1 mt-0">
+	  <div class="card-header small text-white bg-primary rounded-0 font-weight-light" id="queryPanel"><i class="fas fa-search"></i>&nbsp;Query/Subscription</div>
+	  <div class="card-body">
+	    
+	    <!-- SAVED QUERIES -->
+	    <div class="dropdown">
+	      <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+	  	Saved Queries<span class="caret"></span>
+	      </button>
+	      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="queryDropdown">
+	      </ul>
+	    </div>
+	    <br>
+	    
+	    <!-- FORM FOR QUERIES -->
+	    <form>
+	      <div class="form-group">
+	  	<label for="queryInput" class="col-form-label-sm"><b>SPARQL Query</b></label>
+	  	<textarea class="form-control form-control-sm" id="queryTextInput">SELECT ?s ?p ?o WHERE { ?s ?p ?o }</textarea>
+	      </div>
+	      <div class="form-group">
+	  	<label for="queryInput" class="col-form-label-sm"><b>SPARQL Subscription Alias</b></label>
+	  	<input type="text" class="form-control form-control-sm" placeholder="alias" aria-describedby="basic-addon1" id="subscriptionAlias">
+	      </div>
+	      <div class="form-group">
+	  	<label for="queryInput" class="col-form-label-sm"><b>History</b></label>
+	  	<div id="queryHist1" onclick="javascript:loadFromHistory('queryHist1', true);"></div>
+	  	<div id="queryHist2" onclick="javascript:loadFromHistory('queryHist2', true);"></div>
+	  	<div id="queryHist3" onclick="javascript:loadFromHistory('queryHist3', true);"></div>
+	  	<div id="queryHist4" onclick="javascript:loadFromHistory('queryHist4', true);"></div>
+	  	<div id="queryHist5" onclick="javascript:loadFromHistory('queryHist5', true);"></div>
+	      </div>
+	      <div class="form-group" align="center">
+	  	<button type="button" class="btn btn-primary btn-sm" onclick="javascript:query();"><small><i class="fas fa-share-square"></i>&nbsp;Query</small></button>
+	  	<button type="button" class="btn btn-primary btn-sm" onclick="javascript:subscribe();"><small><i class="fas fa-share-square"></i>&nbsp;Subscribe</small></button>
+		<button type="button" class="btn btn-primary btn-sm" onclick="javascript:clr('query');"><small><i class="fas fa-ban"></i>&nbsp;Clear</small></button>
+	      </div>
+	    </form>
+	  </div>
+	  <div class="card-footer small" id="queryPanelFooter"><small><i class="fas fa-info-circle"></i>&nbsp;Issue SPARQL Query or Subscribe requests from this form</small>
+	  </div>
+	</div>
+      </div>
+    </div>
+
+
+    <!-- ROW 4 -->
+    <div class="row">
+
+      <!-- COL -->
+      <div class="col p-0 m-2">	 
+	<div class="card border border-primary rounded-3 m-1 mt-0">
+	  <div class="card-header small text-white bg-primary rounded-0 font-weight-light" id="queryPanel"><i class="fas fa-list-ul"></i>&nbsp;Query Results</div>
+	  <div class="card-body">	      
+      	    <table class="table table-bordered table-hover table-condensed small" id="queryTable">
+      	    </table>
+	    <div class="form-group" align="center">
+      	      <button type="button" class="btn btn-sm btn-primary" onclick="javascript:clr('queryResults');"><small><i class="fas fa-ban"></i>&nbsp;Clear</small></button>
+	    </div>
+      	  </div>
+      	  <div class="card-footer small" id="queryPanelFooter">
+	    <small><i class="fas fa-info-circle"></i>&nbsp;Results of the SPARQL queries</small>
+      	  </div>
+      	</div>
+      </div>
+    </div>
+
+    <!-- ROW 5 -->
+    <div class="row">
+
+      <!-- COL -->
+      <div class="col p-0 m-2">	  
+	<div class="card border border-primary rounded-3 m-1 mt-0">
+	  <div class="card-header small text-white bg-primary rounded-0 font-weight-light" id="queryPanel"><i class="fas fa-cogs"></i>&nbsp;Subscription Management</div>
+	  <div class="card-body">
+	    <label for="subidTable" class="col-form-label-sm"><b>Active Subscriptions</b></label>
+      	    <table class="table table-bordered table-hover table-condensed small" id="subidTable">
+      	      <tr><th>ID</th><th>Alias</th><th>Actions</th></tr>
+      	    </table>
+      	  </div>
+      	  <div class="card-footer small" id="submanPanelFooter">
+	    <small><i class="fas fa-info-circle"></i>&nbsp;Through this panel it is possible to manage SPARQL Subscriptions</small>
+      	  </div>
+      	</div>
+      </div>
+    </div>
+
+    <!-- ROW 6 -->
+    <div class="row">
+
+      <!-- COL -->
+      <div class="col p-0 m-2">
 
 	
-	<!-- COL -->
-	<div class="col p-0 m-2">
-	  
-	  <!-- FORM FOR FORCED BINDINGS -->
-	  <div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
-      	    <div class="modal-dialog">
-      	      <div class="modal-content">
-      	  	<div class="modal-header">
-      	  	  <h4 class="modal-title" id="forcedBindingsHeader"></h4>
-      	  	</div>
-	  	<div class="modal-body">
-      	  	  <form id="fbForm">
-      	  	  </form>
-	  	</div>
-	  	<div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary" onclick="javascript:parseForcedBindings();" id="fbFormSaveBtn">Save changes</button>
-      	  	</div>
-      	      </div>
-      	    </div>
-      	  </div>
-	  
-	  <!-- <\!-- NAMESPACES -\-> -->
-	  <!-- <div class="panel panel-primary"> -->
-      	  <!--   <div class="panel-heading">Namespaces</div> -->
-      	  <!--   <div class="panel-body"> -->
-
-      	  <!--     <form class="form-inline small"> -->
-      	  <!-- 	<div class="form-group"> -->
-      	  <!-- 	  <label>Prefix:</label> -->
-      	  <!-- 	  <input type="text" class="form-control" id="prefixField"> -->
-      	  <!-- 	</div> -->
-      	  <!-- 	<div class="form-group"> -->
-      	  <!-- 	  <label>Namespace:</label> -->
-      	  <!-- 	  <input type="text" class="form-control" id="namespaceField"> -->
-      	  <!-- 	</div> -->
-      	  <!-- 	<button type="button" class="btn btn-primary" onclick="javascript:addNamespace();">Add/Edit</button> -->
-      	  <!--     </form> -->
-	  
-      	  <!--     <table class="table table-bordered table-hover table-condensed small" id="namespacesTable"> -->
-      	  <!-- 	<tr><th>Prefix</th><th>Namespace</th><th>Actions</th></tr> -->
-      	  <!--     </table> -->
-      	  <!--   </div> -->
-      	  <!--   <div class="panel-footer small" id="nsPanelFooter"> -->
-      	  <!--   </div> -->
-      	  <!-- </div> -->
-	  
-      	  <!-- UPDATE -->
-	  <div class="card border border-primary rounded-3 m-1 mt-0">
-	    <div class="card-header small text-white bg-primary rounded-0 font-weight-light" id="updatePanel"><i class="fas fa-pencil-alt"></i>&nbsp;Update</div>
-	    <div class="card-body">
-      	      <div class="form-group input-group-sm">      	    	
-      		
-      		<!-- UPDATE TEXT -->
-      		<form>
-      		  <div class="form-group">
-		    
-      		    <div class="dropdown">
-      		      <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-      			Saved Updates<span class="caret"></span>
-      		      </button>
-      		      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="updateDropdown">
-      		      </ul>
-      		    </div>
-      		  </div>
-		  
-      		  <div class="form-group">
-      		    <label for="updateInput" class="col-form-label-sm"><b>SPARQL Update</b></label>
-      		    <textarea class="form-control form-control-sm" id="updateTextInput"></textarea>
-      		  </div>
-
-      		  <div class="form-group">
-      		    <label class="col-form-label-sm"><b>History</b></label>
-      		    <div id="updHist1" onclick="javascript:loadFromHistory('updHist1', false);"></div>
-      		    <div id="updHist2" onclick="javascript:loadFromHistory('updHist2', false);"></div>
-      		    <div id="updHist3" onclick="javascript:loadFromHistory('updHist3', false);"></div>
-      		    <div id="updHist4" onclick="javascript:loadFromHistory('updHist4', false);"></div>
-      		    <div id="updHist5" onclick="javascript:loadFromHistory('updHist5', false);"></div>
-      		  </div>
-
-		  <div class="form-group" align="center">
-      		    <button type="button" class="btn btn-primary btn-sm" onclick="javascript:update();"><small><i class="fas fa-share-square"></i>&nbsp;Update</small></button>
-      		    <button type="button" class="btn btn-primary btn-sm" onclick="javascript:clr('update');"><small><i class="fas fa-ban"></i>&nbsp;Clear</small></button>
-		  </div>
-      		</form>
-	      </div>
-      	    </div>
-      	    <div class="card-footer small" id="updatePanelFooter">
-	      <i class="fas fa-info-circle"><small></i>&nbsp;Issue SPARQL Update from this form</small>
-      	    </div>
-      	  </div>
-	  
-	</div>
-      </div>
-      <!-- END OF ROW 2 -->
-      
-      <!-- ROW 3 -->
-      <div class="row">
-
-	<!-- COL -->
-	<div class="col p-0 m-2">
-	  
-	  <!-- CARD QUERY -->
-	  <div class="card border border-primary rounded-3 m-1 mt-0">
-	    <div class="card-header small text-white bg-primary rounded-0 font-weight-light" id="queryPanel"><i class="fas fa-search"></i>&nbsp;Query/Subscription</div>
-	    <div class="card-body">
-	      
-	      <!-- SAVED QUERIES -->
-	      <div class="dropdown">
-	  	<button class="btn btn-default dropdown-toggle btn-sm" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-	  	  Saved Queries<span class="caret"></span>
-	  	</button>
-		<ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="queryDropdown">
-	  	</ul>
-	      </div>
-	      <br>
-	      
-	      <!-- FORM FOR QUERIES -->
-	      <form>
-	  	<div class="form-group">
-	  	  <label for="queryInput" class="col-form-label-sm"><b>SPARQL Query</b></label>
-	  	  <textarea class="form-control form-control-sm" id="queryTextInput">SELECT ?s ?p ?o WHERE { ?s ?p ?o }</textarea>
-	  	</div>
-	  	<div class="form-group">
-	  	  <label for="queryInput" class="col-form-label-sm"><b>SPARQL Subscription Alias</b></label>
-	  	  <input type="text" class="form-control form-control-sm" placeholder="alias" aria-describedby="basic-addon1" id="subscriptionAlias">
-	  	</div>
-	  	<div class="form-group">
-	  	  <label for="queryInput" class="col-form-label-sm"><b>History</b></label>
-	  	  <div id="queryHist1" onclick="javascript:loadFromHistory('queryHist1', true);"></div>
-	  	  <div id="queryHist2" onclick="javascript:loadFromHistory('queryHist2', true);"></div>
-	  	  <div id="queryHist3" onclick="javascript:loadFromHistory('queryHist3', true);"></div>
-	  	  <div id="queryHist4" onclick="javascript:loadFromHistory('queryHist4', true);"></div>
-	  	  <div id="queryHist5" onclick="javascript:loadFromHistory('queryHist5', true);"></div>
-	  	</div>
-		<div class="form-group" align="center">
-	  	  <button type="button" class="btn btn-primary btn-sm" onclick="javascript:query();"><small><i class="fas fa-share-square"></i>&nbsp;Query</small></button>
-	  	  <button type="button" class="btn btn-primary btn-sm" onclick="javascript:subscribe();"><small><i class="fas fa-share-square"></i>&nbsp;Subscribe</small></button>
-		  <button type="button" class="btn btn-primary btn-sm" onclick="javascript:clr('query');"><small><i class="fas fa-ban"></i>&nbsp;Clear</small></button>
-		</div>
-	      </form>
-	    </div>
-	    <div class="card-footer small" id="queryPanelFooter"><small><i class="fas fa-info-circle"></i>&nbsp;Issue SPARQL Query or Subscribe requests from this form</small>
+	<div class="card border border-primary rounded-3 m-1 mt-0">
+	  <div class="card-header small text-white bg-primary rounded-0 font-weight-light" id="queryPanel"><i class="fas fa-bolt"></i>&nbsp;Subscription Results</div>
+	  <div class="card-body">
+	    <label for="addedTable" class="col-form-label-sm"><b>Added Results</b></label>
+      	    <table class="table table-bordered table-hover table-condensed small" id="addedTable">
+      	      <tr><th>Sub ID</th></tr>
+      	    </table>
+	    
+      	    <label for="deletedTable" class="col-form-label-sm"><b>Deleted Results</b></label>
+      	    <table class="table table-bordered table-hover table-condensed small" id="deletedTable">
+      	      <tr><th>Sub ID</th></tr>
+      	    </table>
+	    <div class="form-group"  align="center">
+      	      <button type="button" class="btn btn-sm btn-primary" onclick="javascript:clr('subTables');"><small><i class="fas fa-ban"></i>&nbsp;Clear</small></button>
 	    </div>
 	  </div>
-	</div>
-      </div>
-
-
-      <!-- ROW 4 -->
-      <div class="row">
-
-	<!-- COL -->
-	<div class="col p-0 m-2">
-
-	  
-	  <div class="card border border-primary rounded-3 m-1 mt-0">
-	    <div class="card-header small text-white bg-primary rounded-0 font-weight-light" id="queryPanel"><i class="fas fa-list-ul"></i>&nbsp;Query Results</div>
-	    <div class="card-body">
-	      
-      	      <table class="table table-bordered table-hover table-condensed small" id="queryTable">
-      	      </table>
-      	      <button type="button" class="btn btn-primary" onclick="javascript:clr('queryResults');">Clear</button>
-      	    </div>
-      	    <div class="card-footer small" id="queryPanelFooter">
-	      <small><i class="fas fa-info-circle"></i>&nbsp;Results of the SPARQL queries</small>
-      	    </div>
+      	  <div class="card-footer small" id="subresPanelFooter">
+	    <small><i class="fas fa-info-circle"></i>&nbsp;Panel dedicated to notification from the active subscriptions</small>
       	  </div>
-	</div>
+      	</div>
       </div>
-
-      <!-- ROW 5 -->
-      <div class="row">
-
-	<!-- COL -->
-	<div class="col p-0 m-2">
-
-	  
-	  <div class="card border border-primary rounded-3 m-1 mt-0">
-	    <div class="card-header small text-white bg-primary rounded-0 font-weight-light" id="queryPanel"><i class="fas fa-cogs"></i>&nbsp;Subscription Management</div>
-	    <div class="card-body">
-	      Active Subscriptions
-      	      <table class="table table-bordered table-hover table-condensed small" id="subidTable">
-      		<tr><th>ID</th><th>Alias</th><th>Actions</th></tr>
-      	      </table>
-      	    </div>
-      	    <div class="card-footer small" id="submanPanelFooter">
-	      <small><i class="fas fa-info-circle"></i>&nbsp;Through this panel it is possible to manage SPARQL Subscriptions</small>
-      	    </div>
-      	  </div>
-	</div>
-      </div>
-
-      <!-- ROW 6 -->
-      <div class="row">
-
-	<!-- COL -->
-	<div class="col p-0 m-2">
-
-	  
-	  <div class="card border border-primary rounded-3 m-1 mt-0">
-	    <div class="card-header small text-white bg-primary rounded-0 font-weight-light" id="queryPanel"><i class="fas fa-bolt"></i>&nbsp;Subscription Results</div>
-	    <div class="card-body">
-      	      Added Results
-      	      <table class="table table-bordered table-hover table-condensed small" id="addedTable">
-      		<tr><th>Sub ID</th></tr>
-      	      </table>
-	      
-      	      Deleted Results
-      	      <table class="table table-bordered table-hover table-condensed small" id="deletedTable">
-      		<tr><th>Sub ID</th></tr>
-      	      </table>
-      	      <button type="button" class="btn btn-primary" onclick="javascript:clr('subTables');">Clear Tables</button>	      	      
-	    </div>
-      	    <div class="card-footer small" id="subresPanelFooter">
-	      <small><i class="fas fa-info-circle"></i>&nbsp;Panel dedicated to notification from the active subscriptions</small>
-      	    </div>
-      	  </div>
-	</div>
-      </div>
-
     </div>
-    <!-- END OF MAIN CONTAINER -->
+
+    <!-- ROW 6 -->
+    <div class="row">
+
+      <!-- COL -->
+      <div class="col p-0 m-2">
+
+	
+	<div class="card border border-primary rounded-3 m-1 mt-0">
+	  <div class="card-header small text-white bg-primary rounded-0 font-weight-light" id="queryPanel"><i class="fas fa-info-circle"></i>&nbsp;About</div>
+	  <div class="card-body small">
+	    <b>SEPA Dashboard</b> is maintained by Fabio Viola (fabio.viola at unibo dot it) and released under GNU GPL v3.0.
+	  </div>
+      	  <div class="card-footer small" id="subresPanelFooter">
+	    <small><i class="fas fa-info-circle"></i>&nbsp;Panel dedicated to notification from the active subscriptions</small>
+      	  </div>
+      	</div>
+      </div>
+    </div>
     
-  </body>
+</div>
+<!-- END OF MAIN CONTAINER -->
+
+</body>
 </html>
