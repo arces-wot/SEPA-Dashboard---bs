@@ -1,23 +1,69 @@
-var openSubscriptions = {};
+var openSubscriptions = new Map();
 var myJson = null;
 var tabIndex = 0;
 var headers = {};
+let ids = 0;
+let subEditor;
+let queryEditor;
+let updateEditor;
+
+function onInit() {
+	loadEditors()
+}
+
+function loadEditors() {
+	YASQE.defaults.persistent = null
+	subEditor = YASQE.fromTextArea(document.getElementById('subscribeTextInput'))
+	queryEditor = YASQE.fromTextArea(document.getElementById('queryTextInput'))
+	updateEditor = YASQE.fromTextArea(document.getElementById('updateTextInput'))
+
+	
+	$('#pills-subscribe-tab').on('shown.bs.tab', function handler (e) {
+		subEditor.refresh()
+		YASQE.doAutoFormat(subEditor)
+	})
+	
+	$('#pills-query-tab').on('shown.bs.tab', function handler (e) {
+		
+		queryEditor.refresh()
+		YASQE.doAutoFormat(queryEditor)
+	})
+	
+	$('#pills-update-tab').on('shown.bs.tab', function handler (e) {
+	
+		updateEditor.refresh()
+		YASQE.doAutoFormat(updateEditor)
+	})
+
+	subEditor.setValue(subEditor.getTextArea().value)
+	queryEditor.setValue(queryEditor.getTextArea().value)
+	updateEditor.setValue(updateEditor.getTextArea().value)
+	
+}
 
 function getTimestamp() {
 	date = new Date();
 	return date.toLocaleDateString() + " " + date.toLocaleTimeString();
 };
 
-function deleteNamespace(ns) {
-	document.getElementById(ns).remove();
+function deleteNamespace(pr,ns) {
+	document.getElementById(pr).remove();
+	
+	let pref = {}
+	pref[pr] = ns
+
+	try {subEditor.removePrefixes(pref)} catch (e) {console.log(e)}
+	try {updateEditor.removePrefixes(pref)} catch (e) {console.log(e)}
+	try {queryEditor.removePrefixes(pref)} catch (e) {console.log(e)}
+
 };
+function addNamespaceToAll(pr,ns) {
+	let pref = {}
+	pref[pr] = ns
 
-function addNamespace() {
-	// get the prefix
-	pr = document.getElementById("prefixField").value;
-
-	// get the namespace
-	ns = document.getElementById("namespaceField").value;
+	subEditor.addPrefixes(pref)
+	updateEditor.addPrefixes(pref)
+	queryEditor.addPrefixes(pref)
 
 	// if an old element with the same prefix exists,
 	// then remove it
@@ -44,10 +90,20 @@ function addNamespace() {
 	// actions cell
 	newCell = newRow.insertCell(2);
 	newCell.innerHTML = "<button action='button' class='btn btn-primary btn-sm' onclick='javascript:deleteNamespace("
-			+ '"'
-			+ pr
-			+ '"'
-			+ ");'><small><span class='glyphicon glyphicon-trash' aria-hidden='true''><i class='fas fa-trash-alt'></i>&nbsp;</span>Delete</small></button>";
+		+ '"'
+		+ pr
+		+ '","' + ns + '"'
+		+ ");'><small><span class='glyphicon glyphicon-trash' aria-hidden='true''><i class='fas fa-trash-alt'></i>&nbsp;</span>Delete</small></button>";
+}
+
+function addNamespace() {
+	// get the prefix
+	pr = document.getElementById("prefixField").value;
+
+	// get the namespace
+	ns = document.getElementById("namespaceField").value;
+	
+	addNamespaceToAll(pr,ns)
 };
 
 function getNamespaces() {
@@ -95,25 +151,8 @@ function loadJsap() {
 			table = document.getElementById("namespacesTable");
 
 			// retrieve namespaces
-			for (ns in myJson["namespaces"]) {
-
-				// if an old element with the same prefix exists,
-				// then remove it
-				el = document.getElementById(ns);
-				if ((el !== undefined) && (el !== null)) {
-					el.remove();
-				}
-
-				// add the new item
-				newRow = table.insertRow(-1);
-				newRow.id = ns;
-				newRow.insertCell(0).innerHTML = ns;
-				newRow.insertCell(1).innerHTML = myJson["namespaces"][ns];
-				newRow.insertCell(2).innerHTML = "<button action='button' class='btn btn-primary btn-sm' onclick='javascript:deleteNamespace("
-						+ '"'
-						+ ns
-						+ '"'
-						+ ");'><small><i class='fas fa-trash-alt'></i>&nbsp;</span>Delete</small></button>";
+			for (pr in myJson["namespaces"]) {
+				addNamespaceToAll(pr,myJson.namespaces[pr])
 
 			}
 
@@ -336,15 +375,27 @@ function loadUQS(usq, uqname) {
 	
 	if (usq == "U") {
 		document.getElementById("updateTextInput").value = myJson["updates"][uqname]["sparql"];
+		let tempNS = updateEditor.getPrefixesFromQuery()
+		updateEditor.setValue(myJson["updates"][uqname]["sparql"])
+		updateEditor.addPrefixes(tempNS)
+		YASQE.doAutoFormat(updateEditor)
 		document.getElementById("updateLabel").innerHTML = "<b>" + uqname
 				+ "</b>";
 	} else if (usq == "Q") {
 		document.getElementById("queryTextInput").value = myJson["queries"][uqname]["sparql"];
+		let tempNS = queryEditor.getPrefixesFromQuery()
+		queryEditor.setValue(myJson["queries"][uqname]["sparql"])
+		queryEditor.addPrefixes(tempNS)
+		YASQE.doAutoFormat(queryEditor)
 		document.getElementById("queryLabel").innerHTML = "<b>" + uqname
 				+ "</b>";
 	}
 	else {
 		document.getElementById("subscribeTextInput").value = myJson["queries"][uqname]["sparql"];
+		let tempNS = subEditor.getPrefixesFromQuery()
+		subEditor.setValue(myJson["queries"][uqname]["sparql"])
+		subEditor.addPrefixes(tempNS)
+		YASQE.doAutoFormat(subEditor)
 		document.getElementById("subscribeLabel").innerHTML = "<b>" + uqname
 				+ "</b>";
 		document.getElementById("subscriptionAlias").value = uqname;
@@ -355,15 +406,15 @@ function loadUQS(usq, uqname) {
 
 function query() {
 	// read the query
-	queryText = document.getElementById("queryTextInput").value;
+	queryText = queryEditor.getValue()
 	queryText = replaceBindings("Q",queryText);
 
 	const sepa = Sepajs.client;
 	
-	config = {"host" : $("#host").val() , "sparql11protocol": {"port" : $("#sparql11port").val() , "path" : $("#queryPath").val()}};
+	config = {host : $("#host").val() , sparql11protocol: { protocol : "http", port  : $("#sparql11port").val() , query : { "path" : $("#queryPath").val()}}};
 	
 	start = Date.now(); 
-	sepa.query(getNamespaces() + queryText,config).then((data)=>{
+	sepa.query(queryText,config).then((data)=>{
 		stop = Date.now();
 		
 		$("#queryResultLabel").html("["+getTimestamp()+ "] "+ data["results"]["bindings"].length +" results in "+(stop-start)+ " ms")
@@ -414,14 +465,14 @@ function clearQueryResults(){
 
 function update() {
 	// read the update
-	updateText = document.getElementById("updateTextInput").value;
+	updateText = updateEditor.getValue()
 	updateText = replaceBindings("U",updateText);
 
-	config = {"host" : $("#host").val() , "sparql11protocol": {"port" : $("#sparql11port").val() , "path" : $("#updatePath").val()}};
+	config = {host : $("#host").val() , sparql11protocol : { protocol: "http","port" : $("#sparql11port").val() ,update :{ "path" : $("#updatePath").val()}}};
 	
 	const sepa = Sepajs.client;
 	start = Date.now();
-	sepa.update(getNamespaces() + updateText,config).then((data)=>{ 
+	sepa.update( updateText,config).then((data)=>{ 
 		stop = Date.now();
 		$("#updateResultLabel").html("["+getTimestamp()+ "] Update done in "+(stop-start)+ " ms")
 	}).catch((err)=>{
@@ -429,230 +480,184 @@ function update() {
 		 $("#updateResultLabel").html("["+getTimestamp()+ "] "+err+" *** Update FAILED in "+(stop-start)+ " ms ***")
 	 });
 };
-
+function generateIdBySuggestion(suggestion) {
+	if(!suggestion || openSubscriptions.get(suggestion)){
+		return suggestion + ++ids
+	}else{
+		return suggestion
+	}
+}
 function subscribe() {
 	// read the query
-	subscribeText = document.getElementById("subscribeTextInput").value
+	subscribeText = subEditor.getValue();
 	subscribeText = getNamespaces() + replaceBindings("U",subscribeText);
 
-	/* TODO: use JS SEPA API
+	
 	ws = $("#sparql11seprotocol").val();
-	config = {"host" : $("#host").val() , "sparql11seprotocol": {ws : {"port" : $("#sparql11seport").val() , "path" : $("#subscribePath").val()}}};
+	config = { host: $("#host").val(), sparql11seprotocol: { protocol: "ws", availableProtocols: {ws : {port : $("#sparql11seport").val() , path : $("#subscribePath").val()} } }};
 	
 	const sepa = Sepajs.client;
-	sepa.subscribe(getNamespaces() + subscribeText,{
-	    next(data) {console.log("Data received: " + data)},
-	    error(err) { console.log("Received an error: " + err) },
-	    complete() { console.log("Server closed connection ") },
-	  },
-	  config)
-	}
-	*/
+	let id = generateIdBySuggestion($('#subscriptionAlias').val())
+	let subscription = sepa.subscribe(subscribeText, config, id)
+	let tab = undefined
+	subscription.on("subscribed",(data) => {
+		// get the subscription id
+		spuid = data.spuid
+		let alias = data.alias
 
-	if ($("#sparql11seport").val() === "") port = "";
-	else port = ":" + $("#sparql11seport").val();
-	
-	subscribeURI = $("#sparql11seprotocol").val() + "://" + $("#host").val() + port + $("#subscribePath").val();
-	
-	// open a websocket
-	var ws = new WebSocket(subscribeURI);
+		$("#subscribeInfoLabel").html("[" + getTimestamp() + "] New subscription " + spuid);
+		$("#notificationsInfoLabel").html("[" + getTimestamp() + "] New subscription " + spuid);
 
-	var spuid = null;
-	
-	ws.onerror = function() {
-		console.log("ERROR");
-		
-		$("#subscribeInfoLabel").html("["+getTimestamp()+ "] *** Subscribe FAILED @ "+subscribeURI+" ***");
-		
-	};
+		tabIndex = tabIndex + 1;
 
-	ws.onopen = function() {
-		// generate an alias
-		alias = document.getElementById("subscriptionAlias").value;
+		tab = tabIndex
 
-		// send subscription
-		ws.send(JSON.stringify({
-			"subscribe" : {
-				"sparql" : subscribeText,
-				"alias" : alias
-			}
-		}));
-	};
+		// Create TAB entry
+		$("#pills-tab-subscriptions").append(
+			"<li class=\"nav-item\">" +
+			"	<a class=\"nav-link\" " +
+			"id=\"pills-" + tabIndex + "-tab\" " +
+			"data-toggle=\"pill\" " +
+			"href=\"#pills-" + tabIndex + "\" " +
+			"role=\"tab\" " +
+			"aria-controls=\"pills-" + tabIndex + "\" " +
+			"aria-selected=\"false\">" + alias + "</a></li>");
 
-	// handler for received messages
-	ws.onmessage = function(event) {
+		// Create TAB content				
+		$("#pills-tabContent-subscriptions").append(
+			"<div class=\"tab-pane mt-3 fade\" " +
+			"id=\"pills-" + tabIndex + "\" " +
+			"role=\"tabpanel\" " +
+			"aria-labelledby=\"pills-" + tabIndex + "-tab\">" +
+			"<button action='button' class='btn btn-outline-danger btn-sm mb-3 float-right' " +
+			"onclick='javascript:unsubscribe(\"" + alias + "\")'>" +
+			"<small><i class='fas fa-trash-alt'></i>&nbspUnsubscribe</small>" +
+			"</button>" +
+			"<div class=\"table-responsive\">" +
+			"<div class=\"table-wrapper\">" +
+			"<table class=\"table table-bordered table-hover table-sm\" " +
+			"id=\"table-" + tabIndex + "\"></table>" +
+			"</div>" +
+			"</div>" +
+			"</div>");
 
-		// parse the message
-		msg = JSON.parse(event.data);
+		// SHOW tab
+		$('#pills-' + tabIndex + "-tab").tab('show');
+	})
 
-		if (msg["notification"] !== undefined) {
+	subscription.on("notification", (data) => {
+		if (data) {
 			// get the subscription id
-			spuid = msg["notification"]["spuid"];
-			alias = msg["notification"]["alias"];
-			
-			if (alias === "") {
-				alias = spuid;
-			}
-			
-			// FIRST NOTIFICATION
-			if (msg["notification"]["sequence"] == 0) {
-				
-				$("#subscribeInfoLabel").html("["+getTimestamp()+ "] New subscription "+spuid);
-				$("#notificationsInfoLabel").html("["+getTimestamp()+ "] New subscription "+spuid);
-				
-				tabIndex = tabIndex + 1;
-				openSubscriptions[spuid] = {"ws": ws, "tab": tabIndex};
-				
-				// Create TAB entry
-				$("#pills-tab-subscriptions").append(
-						"<li class=\"nav-item\">" +
-						"	<a class=\"nav-link\" " +
-						"id=\"pills-"+tabIndex+"-tab\" " +
-						"data-toggle=\"pill\" " +
-						"href=\"#pills-"+tabIndex+"\" " +
-						"role=\"tab\" " +
-						"aria-controls=\"pills-"+tabIndex+"\" " +
-						"aria-selected=\"false\">"+alias+"</a></li>");
-				
-				// Create TAB content				
-				$("#pills-tabContent-subscriptions").append(
-						"<div class=\"tab-pane mt-3 fade\" " +
-						"id=\"pills-" + tabIndex+"\" " +
-						"role=\"tabpanel\" " +
-						"aria-labelledby=\"pills-" + tabIndex+"-tab\">" +
-							"<button action='button' class='btn btn-outline-danger btn-sm mb-3 float-right' " +
-							"onclick='javascript:unsubscribe(\""+spuid+"\")'>"+
-							"<small><i class='fas fa-trash-alt'></i>&nbspUnsubscribe</small>" +
-							"</button>" +
-							"<div class=\"table-responsive\">"+
-							"<div class=\"table-wrapper\">"+
-								"<table class=\"table table-bordered table-hover table-sm\" " +
-								"id=\"table-" + tabIndex+"\"></table>" +
-							"</div>" +
-							"</div>" +
-						"</div>");
-				
-				// SHOW tab
-				$('#pills-'+tabIndex+"-tab").tab('show');
-			}
-			
-			$("#notificationsInfoLabel").html("["+getTimestamp()+ "] Last notification: "+spuid +" ("+msg["notification"]["sequence"]+")");
-			
+			spuid = data.spuid
+
+			$("#notificationsInfoLabel").html("[" + getTimestamp() + "] Last notification: " + spuid + " (" + data.sequence + ")");
+
 			// TABLE HEADER
-			for (v in msg["notification"]["removedResults"]["head"]["vars"]) {
-				name = msg["notification"]["removedResults"]["head"]["vars"][v];
-				
-				if (headers[spuid] == null) {	
+			for (v in data["removedResults"]["head"]["vars"]) {
+				name = data["removedResults"]["head"]["vars"][v];
+
+				if (headers[spuid] == null) {
 					// NEW HEADER
 					headers[spuid] = [];
 					headers[spuid].push(name);
-					
-					$("#activeSubscriptions #table-"+openSubscriptions[spuid].tab).append("<thead class=\"thead-light\"><tr><th scope=\"col\">"+"#"+"</th></tr></thead>");
-					$("#activeSubscriptions #table-"+openSubscriptions[spuid].tab+" thead tr").append("<th scope=\"col\">"+name+"</th>");
-					
+
+					$("#activeSubscriptions #table-" + tab).append("<thead class=\"thead-light\"><tr><th scope=\"col\">" + "#" + "</th></tr></thead>");
+					$("#activeSubscriptions #table-" + tab + " thead tr").append("<th scope=\"col\">" + name + "</th>");
+
 					// NEW BODY
-					$("#activeSubscriptions #table-"+openSubscriptions[spuid].tab).append("<tbody id=\"tbody-"+openSubscriptions[spuid].tab+"\"></tbody>");
+					$("#activeSubscriptions #table-" + tab).append("<tbody id=\"tbody-" + tab + "\"></tbody>");
 				}
 				else if (!headers[spuid].includes(name)) {
 					// NEW VARIABLE
 					headers[spuid].push(name);
-					$("#activeSubscriptions #table-"+openSubscriptions[spuid].tab+" thead tr").append("<th scope=\"col\">"+name+"</th");
+					$("#activeSubscriptions #table-" + tab + " thead tr").append("<th scope=\"col\">" + name + "</th");
 				}
 			}
-			
-			for (v in msg["notification"]["addedResults"]["head"]["vars"]) {
-				name = msg["notification"]["addedResults"]["head"]["vars"][v];
-				
-				if (headers[spuid] == null) {	
+
+			for (v in data["addedResults"]["head"]["vars"]) {
+				name = data["addedResults"]["head"]["vars"][v];
+
+				if (headers[spuid] == null) {
 					// NEW HEADER
 					headers[spuid] = [];
 					headers[spuid].push(name);
-					
-					$("#activeSubscriptions #table-"+openSubscriptions[spuid].tab).append("<thead><tr><th scope=\"col\">"+"#"+"</th></tr></thead>");
-					$("#activeSubscriptions #table-"+openSubscriptions[spuid].tab+" thead tr").append("<th scope=\"col\">"+name+"</th>");
-					
+
+					$("#activeSubscriptions #table-" + tab).append("<thead><tr><th scope=\"col\">" + "#" + "</th></tr></thead>");
+					$("#activeSubscriptions #table-" + tab + " thead tr").append("<th scope=\"col\">" + name + "</th>");
+
 					// NEW BODY
-					$("#activeSubscriptions #table-"+openSubscriptions[spuid].tab).append("<tbody id=\"tbody-"+openSubscriptions[spuid].tab+"\"></tbody>");
+					$("#activeSubscriptions #table-" + tab).append("<tbody id=\"tbody-" + tab + "\"></tbody>");
 				}
 				else if (!headers[spuid].includes(name)) {
 					// NEW VARIABLE
 					headers[spuid].push(name);
-					$("#activeSubscriptions #table-"+openSubscriptions[spuid].tab+" thead tr").append("<th scope=\"col\">"+name+"</th");
+					$("#activeSubscriptions #table-" + tab + " thead tr").append("<th scope=\"col\">" + name + "</th");
 				}
 			}
-			
-						
+
+
 			/*
 			 * <tbody> <tr class="table-danger"> <th scope="row">1</th> <td>Mark</td>
 			 * <td>Otto</td> <td>@mdo</td> </tr> <tr class="table-success">
 			 * <th scope="row">3</th> <td>Larry</td> <td>the Bird</td>
 			 * <td>@twitter</td> </tr> </tbody>
-			 */
-			
+			*/
+
 			// iterate over the REMOVED bindings to fill the table
-			for (index in msg["notification"]["removedResults"]["results"]["bindings"]) {
-				bindings = msg["notification"]["removedResults"]["results"]["bindings"][index];
-				
-				$("#activeSubscriptions #tbody-"+openSubscriptions[spuid].tab).prepend("<tr class=\"table-danger\"></tr>");
-				
-				tr = $("#activeSubscriptions #tbody-"+openSubscriptions[spuid].tab+" tr:first");
-				tr.append("<td>"+msg["notification"]["sequence"]+"</td>");
-				
-				for(name of headers[spuid]) {
+			for (index in data["removedResults"]["results"]["bindings"]) {
+				bindings = data["removedResults"]["results"]["bindings"][index];
+
+				$("#activeSubscriptions #tbody-" + tab).prepend("<tr class=\"table-danger\"></tr>");
+
+				tr = $("#activeSubscriptions #tbody-" + tab + " tr:first");
+				tr.append("<td>" + data["sequence"] + "</td>");
+
+				for (name of headers[spuid]) {
 					if (bindings[name] != null) value = bindings[name]["value"];
 					else value = "";
-					
-					tr.append("<td>"+value+"</td>");
+
+					tr.append("<td>" + value + "</td>");
 				}
 			}
-			
+
 			// iterate over the ADDED bindings to fill the table
-			for (index in msg["notification"]["addedResults"]["results"]["bindings"]) {
-				bindings = msg["notification"]["addedResults"]["results"]["bindings"][index];
-				
-				$("#activeSubscriptions #tbody-"+openSubscriptions[spuid].tab).prepend("<tr class=\"table-success\"></tr>");
-				
-				tr = $("#activeSubscriptions #tbody-"+openSubscriptions[spuid].tab+" tr:first");
-				tr.append("<td>"+msg["notification"]["sequence"]+"</td>");
-				
-				for(name of headers[spuid]) {
+			for (index in data["addedResults"]["results"]["bindings"]) {
+				bindings = data["addedResults"]["results"]["bindings"][index];
+
+				$("#activeSubscriptions #tbody-" + tab).prepend("<tr class=\"table-success\"></tr>");
+
+				tr = $("#activeSubscriptions #tbody-" + tab + " tr:first");
+				tr.append("<td>" + data["sequence"] + "</td>");
+
+				for (name of headers[spuid]) {
 					if (bindings[name] != null) value = bindings[name]["value"];
 					else value = "";
-					
-					tr.append("<td>"+value+"</td>");
+
+					tr.append("<td>" + value + "</td>");
 				}
-			}				
-		} 
-		else if (msg["unsubscribed"] !== undefined) {
-			// CLOSE the tab
-			spuid = msg["unsubscribed"]["spuid"];
-			tab = openSubscriptions[spuid].tab;
-			delete openSubscriptions[spuid];
-			
-			closeSpuidTab(tab);
-			
-			$("#subscribeInfoLabel").html("["+getTimestamp()+ "] Unsubscribed "+spuid);
-		} 
+			}
+		}
 		else {
 			console.log(msg);
-			
-			$("#subscribeInfoLabel").html("["+getTimestamp()+ "] Subscribe FAILED @ "+msg);
-		}
-	};
 
-	// handler for the ws closing
-	ws.onclose = function(event) {
-		if (spuid !== null) {
-			tab = openSubscriptions[spuid].tab;
-			delete openSubscriptions[spuid];
-			
-			closeSpuidTab(tab);
-			
-			$("#subscribeInfoLabel").html("["+getTimestamp()+ "] Subscription closed "+spuid);
+			$("#subscribeInfoLabel").html("[" + getTimestamp() + "] Subscribe FAILED @ " + msg);
 		}
-	};
+	})
+	subscription.on("error",(err) => {
+		$("#subscribeInfoLabel").html("[" + getTimestamp() + "] *** Subscribe FAILED @ " + $("#host").val() + " ***")
+	})
+	subscription.on("connection-error",(err) => {
+		$("#subscribeInfoLabel").html("[" + getTimestamp() + "] *** Subscribe FAILED @ " + $("#host").val() + " ***")
+	})
+	subscription.on("unsubscribed",(not) => {
+		if (tab) closeSpuidTab(tab);
 
+		$("#subscribeInfoLabel").html("[" + getTimestamp() + "] Unsubscribed ");
+	})
+	  
+	openSubscriptions.set(id,subscription)
 }
+
 
 function closeSpuidTab(tab) {
 	$("#pills-tab-subscriptions #pills-"+tab+"-tab").remove();
@@ -661,10 +666,6 @@ function closeSpuidTab(tab) {
 	$("#pills-tab-subscriptions .nav-link:last").tab('show');	
 }
 
-function unsubscribe(spuid) {
-	openSubscriptions[spuid].ws.send(JSON.stringify({
-		"unsubscribe" : {
-			"spuid" : spuid
-		}
-	}));
+function unsubscribe(alias) {
+	openSubscriptions.get(alias).unsubscribe()
 }

@@ -19,10 +19,11 @@
 <link rel="stylesheet"
 	href="fontawesome-free-5.0.6/web-fonts-with-css/css/fontawesome-all.css">
 <link rel="stylesheet" href="css/dashboard.css">
+<link href='http://cdn.jsdelivr.net/npm/yasgui-yasqe@2.11.22/dist/yasqe.min.css' rel='stylesheet' type='text/css' />
 
 </head>
 
-<body onload="">
+<body onload="onInit()">
 	<nav class="navbar">
 		<a class="navbar-brand" href="#"> <img src="icon/sepa.svg"
 			width="32" height="32" class="d-inline-block align-top" alt="">
@@ -35,7 +36,7 @@
 			id="pills-configure-tab" data-toggle="pill" href="#pills-configure"
 			role="tab" aria-controls="pills-configure" aria-selected="true">Configure</a></li>
 		<li class="nav-item"><a class="nav-link" id="pills-update-tab"
-			data-toggle="pill" href="#pills-update" role="tab"
+			data-toggle="pill" data-target="#pills-update" href="#pills-update" role="tab"
 			aria-controls="pills-update" aria-selected="false">Update</a></li>
 		<li class="nav-item"><a class="nav-link" id="pills-query-tab"
 			data-toggle="pill" href="#pills-query" role="tab"
@@ -434,13 +435,16 @@
 
 	<!-- Optional JavaScript -->
 	<script
-		src="https://cdn.jsdelivr.net/npm/@arces-wot/sepa-js@0.1.0/web/sepa.js"></script>
+		src="https://cdn.jsdelivr.net/npm/@arces-wot/sepa-js@0.4.0/web/sepa.js"></script>
 	<script type="text/javascript" src="js/sepadashboard.js"></script>
 
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
 		crossorigin="anonymous"></script>
+	
+	<script src='http://cdn.jsdelivr.net/npm/yasgui-yasqe@2.11.22/dist/yasqe.bundled.min.js'></script>
+	
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
 		integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
