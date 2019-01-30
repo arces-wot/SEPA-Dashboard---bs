@@ -490,7 +490,7 @@ function generateIdBySuggestion(suggestion) {
 function subscribe() {
 	// read the query
 	subscribeText = subEditor.getValue();
-	subscribeText = getNamespaces() + replaceBindings("U",subscribeText);
+	subscribeText = replaceBindings("U",subscribeText);
 
 	
 	ws = $("#sparql11seprotocol").val();
