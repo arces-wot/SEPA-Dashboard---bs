@@ -1,11 +1,17 @@
 var openSubscriptions = new Map();
-var myJson = null;
+var myJson = {
+	namespaces : {}
+};
 var tabIndex = 0;
 var headers = {};
 let ids = 0;
 let subEditor;
 let queryEditor;
 let updateEditor;
+
+let emptyMarker = {
+	clear : () => {},
+}
 
 function onInit() {
 	loadEditors()
@@ -17,22 +23,30 @@ function loadEditors() {
 	queryEditor = YASQE.fromTextArea(document.getElementById('queryTextInput'))
 	updateEditor = YASQE.fromTextArea(document.getElementById('updateTextInput'))
 
-	
+	subEditor.prefixMarker = emptyMarker
+	queryEditor.prefixMarker = emptyMarker
+	updateEditor.prefixMarker = emptyMarker
+		
 	$('#pills-subscribe-tab').on('shown.bs.tab', function handler (e) {
+		unFixGlobalNamespaces(subEditor)
 		subEditor.refresh()
 		YASQE.doAutoFormat(subEditor)
+		fixGlobalNamespaces(subEditor)
 	})
 	
 	$('#pills-query-tab').on('shown.bs.tab', function handler (e) {
 		
 		queryEditor.refresh()
+		unFixGlobalNamespaces(queryEditor)
 		YASQE.doAutoFormat(queryEditor)
+		fixGlobalNamespaces(queryEditor)
 	})
 	
 	$('#pills-update-tab').on('shown.bs.tab', function handler (e) {
-	
+		unFixGlobalNamespaces(updateEditor)
 		updateEditor.refresh()
 		YASQE.doAutoFormat(updateEditor)
+		fixGlobalNamespaces(updateEditor)
 	})
 
 	subEditor.setValue(subEditor.getTextArea().value)
@@ -48,7 +62,7 @@ function getTimestamp() {
 
 function deleteNamespace(pr,ns) {
 	document.getElementById(pr).remove();
-	
+	delete myJson.namespaces[pr]
 	let pref = {}
 	pref[pr] = ns
 
@@ -102,26 +116,19 @@ function addNamespace() {
 
 	// get the namespace
 	ns = document.getElementById("namespaceField").value;
-	
+	myJson.namespaces[pr] = ns
 	addNamespaceToAll(pr,ns)
 };
 
-function getNamespaces() {
-	// initialize the results
-	ns = "";
-
-	// get namespace table
-	table = document.getElementById("namespacesTable");
-	for (var i = 1; i < table.rows.length; i++) {
-		ns += "PREFIX " + table.rows[i].cells[0].innerHTML + ": <"
-				+ table.rows[i].cells[1].innerHTML + "> ";
-	}
-	;
-
-	// return
-	return ns;
-
-};
+function fixGlobalNamespaces(editor) {
+	let startPrefixes = { line: 0, ch: 0 }
+	let endPrefixes = { line: Object.keys(myJson.namespaces).length, ch: 0 }
+	let marker = editor.markText(startPrefixes, endPrefixes, { readOnly: true, className: "non-editable" })
+	editor.prefixMarker = marker
+}
+function unFixGlobalNamespaces(editor) {
+	editor.prefixMarker.clear()
+}
 
 function loadJsap() {
 	// check if file reader is supported
@@ -153,8 +160,12 @@ function loadJsap() {
 			// retrieve namespaces
 			for (pr in myJson["namespaces"]) {
 				addNamespaceToAll(pr,myJson.namespaces[pr])
-
 			}
+
+			fixGlobalNamespaces(queryEditor)
+			fixGlobalNamespaces(updateEditor)
+			fixGlobalNamespaces(subEditor)
+
 
 			// retrieve the URLs
 			$("#host").val(myJson["host"]);
