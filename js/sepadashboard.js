@@ -389,7 +389,9 @@ function loadUQS(usq, uqname) {
 		let tempNS = updateEditor.getPrefixesFromQuery()
 		updateEditor.setValue(myJson["updates"][uqname]["sparql"])
 		updateEditor.addPrefixes(tempNS)
+		unFixGlobalNamespaces(updateEditor)
 		YASQE.doAutoFormat(updateEditor)
+		fixGlobalNamespaces(updateEditor)
 		document.getElementById("updateLabel").innerHTML = "<b>" + uqname
 				+ "</b>";
 	} else if (usq == "Q") {
@@ -397,7 +399,9 @@ function loadUQS(usq, uqname) {
 		let tempNS = queryEditor.getPrefixesFromQuery()
 		queryEditor.setValue(myJson["queries"][uqname]["sparql"])
 		queryEditor.addPrefixes(tempNS)
+		unFixGlobalNamespaces(queryEditor)
 		YASQE.doAutoFormat(queryEditor)
+		fixGlobalNamespaces(queryEditor)
 		document.getElementById("queryLabel").innerHTML = "<b>" + uqname
 				+ "</b>";
 	}
@@ -406,7 +410,9 @@ function loadUQS(usq, uqname) {
 		let tempNS = subEditor.getPrefixesFromQuery()
 		subEditor.setValue(myJson["queries"][uqname]["sparql"])
 		subEditor.addPrefixes(tempNS)
+		unFixGlobalNamespaces(subEditor)
 		YASQE.doAutoFormat(subEditor)
+		fixGlobalNamespaces(subEditor)
 		document.getElementById("subscribeLabel").innerHTML = "<b>" + uqname
 				+ "</b>";
 		document.getElementById("subscriptionAlias").value = uqname;
