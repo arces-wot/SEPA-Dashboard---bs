@@ -16,9 +16,17 @@ let emptyMarker = {
 function onInit() {
 	loadEditors()
 
-	let operation = getQueryVariable("op");
-	let query = getQueryVariable("query");
-
+	let type = getQueryVariable("mode");
+	switch (type) {
+		case "local":
+			$("#host").val("localhost");
+			break;
+		case "playground":
+			$("#configPanel").hide()
+			break;
+		default:
+			break;
+	}
 	
 }
 
