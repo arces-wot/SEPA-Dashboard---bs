@@ -22,7 +22,9 @@
 <link rel="stylesheet"
 	href="fontawesome-free-5.0.6/web-fonts-with-css/css/fontawesome-all.css">
 <link rel="stylesheet" href="css/dashboard.css">
-<link href='http://cdn.jsdelivr.net/npm/yasgui-yasqe@2.11.22/dist/yasqe.min.css' rel='stylesheet' type='text/css' />
+<link
+	href='http://cdn.jsdelivr.net/npm/yasgui-yasqe@2.11.22/dist/yasqe.min.css'
+	rel='stylesheet' type='text/css' />
 <meta name="theme-color" content="#007bff">
 
 </head>
@@ -30,8 +32,7 @@
 <body onload="onInit()">
 	<nav class="navbar">
 		<a class="navbar-brand" href="#"> <img src="icon/newFullLogo.png"
-			width="100" class="d-inline-block align-top" alt="">
-			Dashboard
+			width="100" class="d-inline-block align-top" alt=""> Dashboard
 		</a>
 	</nav>
 
@@ -40,8 +41,8 @@
 			id="pills-configure-tab" data-toggle="pill" href="#pills-configure"
 			role="tab" aria-controls="pills-configure" aria-selected="true">Configure</a></li>
 		<li class="nav-item"><a class="nav-link" id="pills-update-tab"
-			data-toggle="pill" data-target="#pills-update" href="#pills-update" role="tab"
-			aria-controls="pills-update" aria-selected="false">Update</a></li>
+			data-toggle="pill" data-target="#pills-update" href="#pills-update"
+			role="tab" aria-controls="pills-update" aria-selected="false">Update</a></li>
 		<li class="nav-item"><a class="nav-link" id="pills-query-tab"
 			data-toggle="pill" href="#pills-query" role="tab"
 			aria-controls="pills-query" aria-selected="false">Query</a></li>
@@ -76,23 +77,33 @@
 						<textarea class="form-control form-control-sm" id="queryTextInput">SELECT ?time WHERE { &lt;http://sepatest/currentTime&gt; &lt;http://sepatest/hasValue&gt; ?time }</textarea>
 					</div>
 
-					<div class="row mt-3" id="queryForcedBindings">
-							
-					</div>
+					<div class="row mt-3" id="queryForcedBindings"></div>
+
+					<div class="alert alert-info" id="queryResultLabel" role="alert">Query
+						info</div>
 
 					<div class="row mt-3 justify-content-center">
 						<button type="button" class="btn btn-primary"
 							onclick="javascript:query();">
 							<small><i class="fas fa-share-square"></i>&nbsp;Query</small>
 						</button>
+						<button type="button"
+							class="btn btn-outline-danger float-right ml-3"
+							onclick="javascript:clearQueryResults();">
+							<small><i class="fas fa-ban"></i>&nbsp;Clear</small>
+						</button>
+						<!-- 						<div class="form-group ml-3" align="center"> -->
+						<!-- 							btn-sm btn-primary  -->
+
+						<!-- 						</div> -->
 					</div>
 
-					<div class="row">
-						<label> <b>Query results</b>&nbsp;<span
-							class="badge badge-pill badge-info">Literal</span>&nbsp;<span
-							class="badge badge-pill badge-success">URI</span>
-						</label>
+					<div class="row flex-row-reverse">
+						<label><span class="badge badge-pill badge-info">Literal</span>&nbsp;
+						<span class="badge badge-pill badge-success mr-3">URI</span> </label>
 					</div>
+
+
 					<div class="row">
 						<div class="table-responsive">
 							<table class="table table-sm table-bordered table-hover"
@@ -105,15 +116,9 @@
 						</div>
 					</div>
 
-					<div class="form-group" align="center">
-						<!-- btn-sm btn-primary  -->
-						<button type="button" class="btn btn-outline-danger float-right"
-							onclick="javascript:clearQueryResults();">
-							<small><i class="fas fa-ban"></i>&nbsp;Clear</small>
-						</button>
-					</div>
+
 				</div>
-				<div class="card-footer text-muted" id="queryResultLabel">Info</div>
+				<!-- 				<div class="card-footer text-muted" id="queryResultLabel">Info</div> -->
 			</div>
 		</div>
 
@@ -209,9 +214,7 @@
 								aria-describedby="basic-addon1" id="subscriptionAlias">
 						</div>
 
-						<div class="row mt-3" id="subscribeForcedBindings">
-							
-						</div>
+						<div class="row mt-3" id="subscribeForcedBindings"></div>
 
 						<div class="form-group" align="center">
 							<button type="button" class="btn btn-primary"
@@ -446,9 +449,10 @@
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
 		crossorigin="anonymous"></script>
-	
-	<script src='http://cdn.jsdelivr.net/npm/yasgui-yasqe@2.11.22/dist/yasqe.bundled.min.js'></script>
-	
+
+	<script
+		src='http://cdn.jsdelivr.net/npm/yasgui-yasqe@2.11.22/dist/yasqe.bundled.min.js'></script>
+
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
 		integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
