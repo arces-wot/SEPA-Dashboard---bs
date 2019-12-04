@@ -29,6 +29,96 @@ function onInit() {
 	}
 	
 }
+let client
+const jsap = `{
+
+"host": "sepa.vaimee.it",
+	"oauth": {
+	"enable": true,
+		"register": "https://sepa.vaimee.it:443/oauth/register",
+			"tokenRequest": "https://sepa.vaimee.it:443/oauth/token"
+},
+"sparql11protocol": {
+	"protocol": "https",
+		"port": 443,
+			"query": {
+		"path": "/secure/query",
+			"method": "POST",
+				"format": "JSON"
+	},
+	"update": {
+		"path": "/secure/update",
+			"method": "POST",
+				"format": "JSON"
+	}
+},
+"sparql11seprotocol": {
+	"protocol": "wss",
+		"availableProtocols": {
+		"ws": {
+			"port": 9000,
+				"path": "/subscribe"
+		},
+		"wss": {
+			"port": 9090,
+				"path": "/secure/subscribe"
+		}
+	}
+},
+"namespaces": {
+	"sepa": "http://wot.arces.unibo.it/sepa#",
+		"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+},
+"updates": {
+	"WRONG" : {
+		"sparql" : "WITH <http://sepatest/> DELETE {?x ?y} WHERE {?y ?z}"
+	},
+	"DELETE_ALL" : {
+		"sparql" : "WITH <http://sepatest/> DELETE {?x ?y ?z} WHERE {?x ?y ?z}"
+	},
+	"VAIMEE": {
+		"sparql": "WITH <http://sepatest/> DELETE {sepa:SV sepa:PV ?o}  WHERE {sepa:SV sepa:PV ?o} ; INSERT DATA {GRAPH<http://sepatest/> {sepa:SV sepa:PV 'vaimee'}}"
+	},
+	"RANDOM": {
+		"sparql": "WITH <http://sepatest/> DELETE {sepa:S sepa:P ?o} WHERE {sepa:S sepa:P ?o} ; WITH <http://sepatest/> INSERT {sepa:S sepa:P ?random} WHERE {BIND(IRI(CONCAT('http://wot.arces.unibo.it/sepa#Random-',STRUUID())) AS ?random)}"
+	},
+	"RANDOM1": {
+		"sparql": "WITH <http://sepatest/> DELETE {sepa:S sepa:P ?o} WHERE {sepa:S1 sepa:P1 ?o} ; WITH <http://sepatest/> INSERT {sepa:S1 sepa:P1 ?random} WHERE {BIND(IRI(CONCAT('http://wot.arces.unibo.it/sepa#Random-',STRUUID())) AS ?random)}"
+	}
+},
+"queries": {
+	"WRONG": {
+		"sparql": "SELECT * WHERE {GRAPH <http://sepatest/> {?x 'vaimee'}}"
+	},
+	"VAIMEE": {
+		"sparql": "SELECT * WHERE {GRAPH <http://sepatest/> {?x ?y 'vaimee'}}"
+	},
+	"ALL": {
+		"sparql": "SELECT * WHERE {GRAPH <http://sepatest/> {?x ?y ?z}}"
+	},
+	"RANDOM": {
+		"sparql": "SELECT * WHERE {GRAPH <http://sepatest/> {sepa:S sepa:P ?random}}"
+	},
+	"RANDOM1": {
+		"sparql": "SELECT * WHERE {GRAPH <http://sepatest/> {sepa:S1 sepa:P1 ?random}}"
+	},
+	"COUNT": {
+		"sparql": "SELECT (COUNT(?x) AS ?n) WHERE {GRAPH <http://sepatest/> {?x ?y ?z}}"
+	}
+}
+}`
+async function login() {
+	const config = JSON.parse(jsap)
+	config.options = {}
+	const user = $("#loginID").val()
+	const pass = $("#loginPass").val()
+	client = new Sepajs.client.secure(user, pass, config)
+	
+	await client.login()
+	$("#loginContainer").hide()
+	$("#appContainer").css("visibility","visible")
+	loadJsapFromJson(config)
+}
 
 function loadEditors() {
 	YASQE.defaults.persistent = null
@@ -247,6 +337,83 @@ function loadJsap() {
 	}
 };
 
+function loadJsapFromJson(myJson) {
+	// get the namespaces table
+	table = document.getElementById("namespacesTable");
+
+	// retrieve namespaces
+	for (pr in myJson["namespaces"]) {
+		addNamespaceToAll(pr, myJson.namespaces[pr])
+	}
+
+	fixGlobalNamespaces(queryEditor)
+	fixGlobalNamespaces(updateEditor)
+	fixGlobalNamespaces(subEditor)
+
+
+	// retrieve the URLs
+	$("#host").val(myJson["host"]);
+
+	$("#sparql11protocol").val(myJson["sparql11protocol"]["protocol"]);
+	$("#sparql11port").val(myJson["sparql11protocol"]["port"]);
+	$("#updatePath").val(myJson["sparql11protocol"]["update"]["path"]);
+	$("#queryPath").val(myJson["sparql11protocol"]["query"]["path"]);
+
+	ws = myJson["sparql11seprotocol"]["protocol"];
+
+	$("#sparql11seprotocol").val(ws);
+	$("#sparql11seport").val(myJson["sparql11seprotocol"]["availableProtocols"][ws]["port"]);
+	$("#subscribePath").val(myJson["sparql11seprotocol"]["availableProtocols"][ws]["path"]);
+
+	// load queries
+	ul = document.getElementById("queryDropdown");
+	for (q in myJson["queries"]) {
+		li = document.createElement("li");
+		li.setAttribute("id", q);
+		li.innerHTML = q;
+		li.setAttribute("onclick",
+			"javascript:loadUQS(\"Q\", '" + q + "');");
+		li.setAttribute("data-toggle", "modal");
+		li.setAttribute("data-target", "#basicModal");
+		li.classList.add("dropdown-item");
+		li.classList.add("small");
+		ul.appendChild(li);
+	}
+	;
+
+	// load subscribes
+	ul = document.getElementById("subscribeDropdown");
+	for (q in myJson["queries"]) {
+		li = document.createElement("li");
+		li.setAttribute("id", q);
+		li.innerHTML = q;
+		li.setAttribute("onclick",
+			"javascript:loadUQS(\"S\", '" + q + "');");
+		li.setAttribute("data-toggle", "modal");
+		li.setAttribute("data-target", "#basicModal");
+		li.classList.add("dropdown-item");
+		li.classList.add("small");
+		ul.appendChild(li);
+	}
+	;
+
+	// load updates
+	ul = document.getElementById("updateDropdown");
+	for (q in myJson["updates"]) {
+		li = document.createElement("li");
+		li.setAttribute("id", q);
+		li.innerHTML = q;
+		li.setAttribute("onclick", "javascript:loadUQS(\"U\", '"
+			+ q + "');");
+		li.setAttribute("data-toggle", "modal");
+		li.setAttribute("data-target", "#basicModal");
+		li.classList.add("dropdown-item");
+		li.classList.add("small");
+		ul.appendChild(li);
+	}
+
+}
+
 //****************************************************//
 //** Validate a URI (includes delimiters in groups) **//
 //****************************************************//
@@ -439,9 +606,9 @@ function query() {
 	queryText = queryEditor.getValue()
 	queryText = replaceBindings("Q",queryText);
 
-	const sepa = Sepajs.client;
+	const sepa = client;
 	
-	config = {host : $("#host").val() , sparql11protocol: { protocol : "http", port  : $("#sparql11port").val() , query : { "path" : $("#queryPath").val()}}};
+	config = { host: $("#host").val(), sparql11protocol: { protocol: $("#sparql11protocol").val(), port  : $("#sparql11port").val() , query : { "path" : $("#queryPath").val()}}};
 	
 	start = Date.now(); 
 	sepa.query(queryText,config).then((data)=>{
@@ -498,9 +665,9 @@ function update() {
 	updateText = updateEditor.getValue()
 	updateText = replaceBindings("U",updateText);
 
-	config = {host : $("#host").val() , sparql11protocol : { protocol: "http","port" : $("#sparql11port").val() ,update :{ "path" : $("#updatePath").val()}}};
+	config = {host : $("#host").val() , sparql11protocol : { protocol: $("#sparql11protocol").val(),"port" : $("#sparql11port").val() ,update :{ "path" : $("#updatePath").val()}}};
 	
-	const sepa = Sepajs.client;
+	const sepa = client;
 	start = Date.now();
 	sepa.update( updateText,config).then((data)=>{ 
 		stop = Date.now();
@@ -521,12 +688,11 @@ function subscribe() {
 	// read the query
 	subscribeText = subEditor.getValue();
 	subscribeText = replaceBindings("U",subscribeText);
-
 	
 	ws = $("#sparql11seprotocol").val();
-	config = { host: $("#host").val(), sparql11seprotocol: { protocol: "ws", availableProtocols: {ws : {port : $("#sparql11seport").val() , path : $("#subscribePath").val()} } }};
+	config = { host: $("#host").val(), sparql11seprotocol: { protocol: $("#sparql11seprotocol").val(), availableProtocols: {ws : {port : $("#sparql11seport").val() , path : $("#subscribePath").val()} } }};
 	
-	const sepa = Sepajs.client;
+	const sepa = client;
 	let id = generateIdBySuggestion($('#subscriptionAlias').val())
 	let subscription = sepa.subscribe(subscribeText, config, id)
 	let tab = undefined
