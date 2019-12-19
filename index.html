@@ -40,14 +40,14 @@
 			<article class="card-body">
 				<h4 class="card-title text-center mb-4 mt-1">Sign in</h4>
 				<hr>
-				<p class="text-success text-center">Some message goes here</p>
+				<p id="logError" class="collapse text-danger text-center">Some message goes here</p>
 				<form action="javascript:login()">
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-prepend">
 								<span class="input-group-text"> <i class="fa fa-user"></i> </span>
 							</div>
-							<input id="loginID" name="" class="form-control" placeholder="Email or login">
+							<input id="email" name="email" class="form-control" placeholder="Email or login" autocomplete="username email name nickname">
 						</div> <!-- input-group.// -->
 					</div> <!-- form-group// -->
 					<div class="form-group">
@@ -55,7 +55,7 @@
 							<div class="input-group-prepend">
 								<span class="input-group-text"> <i class="fa fa-lock"></i> </span>
 							</div>
-							<input id="loginPass" class="form-control" placeholder="******" type="password">
+							<input id="password"  name="password" class="form-control" placeholder="******" type="password" autocomplete="current-password">
 						</div> <!-- input-group.// -->
 					</div> <!-- form-group// -->
 					<div class="form-group">
@@ -71,6 +71,12 @@
 			<a class="navbar-brand" href="#"> <img src="icon/newFullLogo.png"
 				width="100" class="d-inline-block align-top" alt=""> Dashboard
 			</a>
+			<form class="form-inline my-2 my-lg-0">
+				<span class="navbar-text" style="margin-right: 5px;">
+					Welcome <span id="username"></span>
+				</span>
+				<button class="btn btn-danger my-2 my-sm-0" type="submit">Logout</button>
+			</form>
 		</nav>
 	
 		<ul class="nav nav-pills ml-3" id="pills-tab" role="tablist">

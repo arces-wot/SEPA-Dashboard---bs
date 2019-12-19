@@ -107,17 +107,26 @@ const jsap = `{
 	}
 }
 }`
-async function login() {
-	const config = JSON.parse(jsap)
-	config.options = {}
-	const user = $("#loginID").val()
-	const pass = $("#loginPass").val()
-	client = new Sepajs.client.secure(user, pass, config)
+async function login(ev) {
+	try {
+		const config = JSON.parse(jsap)
+		config.options = {}
+		const user = $("#email").val()
+		const pass = $("#password").val()
+		client = new Sepajs.client.secure(user, pass, config)
+
+		await client.login()
+		
+		$("#loginContainer").hide()
+		$("#appContainer").css("visibility", "visible")
+		$("#username").text(user)
+		loadJsapFromJson(config)	
+	} catch (logError) {
+		$("#logError").text("User or password incorrect")
+		$("#logError").toggle()
+		console.error(logError)
+	} 
 	
-	await client.login()
-	$("#loginContainer").hide()
-	$("#appContainer").css("visibility","visible")
-	loadJsapFromJson(config)
 }
 
 function loadEditors() {
