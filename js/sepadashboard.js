@@ -40,7 +40,7 @@ const jsap = `{
 },
 "sparql11protocol": {
 	"protocol": "https",
-		"port": 443,
+		"port": 8443,
 			"query": {
 		"path": "/secure/query",
 			"method": "POST",
