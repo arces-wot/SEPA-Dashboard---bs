@@ -28,6 +28,8 @@ function onInit() {
 			break;
 	}
 	
+	setJsap(jsap);
+	
 }
 
 function loadEditors() {
@@ -143,6 +145,85 @@ function unFixGlobalNamespaces(editor) {
 	editor.prefixMarker.clear()
 }
 
+function setJsap(j) {
+	myJson = j;
+	
+	// get the namespaces table
+	table = document.getElementById("namespacesTable");
+
+	// retrieve namespaces
+	for (pr in myJson["namespaces"]) {
+		addNamespaceToAll(pr,myJson.namespaces[pr])
+	}
+
+	fixGlobalNamespaces(queryEditor)
+	fixGlobalNamespaces(updateEditor)
+	fixGlobalNamespaces(subEditor)
+
+
+	// retrieve the URLs
+	$("#host").val(myJson["host"]);
+	
+	$("#sparql11protocol").val(myJson["sparql11protocol"]["protocol"]);
+	$("#sparql11port").val(myJson["sparql11protocol"]["port"]);	
+	$("#updatePath").val(myJson["sparql11protocol"]["update"]["path"]);
+	$("#queryPath").val(myJson["sparql11protocol"]["query"]["path"]);
+	
+	ws = myJson["sparql11seprotocol"]["protocol"];
+	
+	$("#sparql11seprotocol").val(ws);
+	$("#sparql11seport").val(myJson["sparql11seprotocol"]["availableProtocols"][ws]["port"]);	
+	$("#subscribePath").val(myJson["sparql11seprotocol"]["availableProtocols"][ws]["path"]);
+	
+	// load queries
+	ul = document.getElementById("queryDropdown");
+	for (q in myJson["queries"]) {
+		li = document.createElement("li");
+		li.setAttribute("id", q);
+		li.innerHTML = q;
+		li.setAttribute("onclick",
+				"javascript:loadUQS(\"Q\", '" + q + "');");
+		li.setAttribute("data-toggle", "modal");
+		li.setAttribute("data-target", "#basicModal");
+		li.classList.add("dropdown-item");
+		li.classList.add("small");
+		ul.appendChild(li);
+	}
+	;
+	
+	// load subscribes
+	ul = document.getElementById("subscribeDropdown");
+	for (q in myJson["queries"]) {
+		li = document.createElement("li");
+		li.setAttribute("id", q);
+		li.innerHTML = q;
+		li.setAttribute("onclick",
+				"javascript:loadUQS(\"S\", '" + q + "');");
+		li.setAttribute("data-toggle", "modal");
+		li.setAttribute("data-target", "#basicModal");
+		li.classList.add("dropdown-item");
+		li.classList.add("small");
+		ul.appendChild(li);
+	}
+	;
+
+	// load updates
+	ul = document.getElementById("updateDropdown");
+	for (q in myJson["updates"]) {
+		li = document.createElement("li");
+		li.setAttribute("id", q);
+		li.innerHTML = q;
+		li.setAttribute("onclick", "javascript:loadUQS(\"U\", '"
+				+ q + "');");
+		li.setAttribute("data-toggle", "modal");
+		li.setAttribute("data-target", "#basicModal");
+		li.classList.add("dropdown-item");
+		li.classList.add("small");
+		ul.appendChild(li);
+	}
+	;	
+}
+
 function loadJsap() {
 	// check if file reader is supported
 	if (!window.FileReader) {
@@ -160,89 +241,12 @@ function loadJsap() {
 		fr = new FileReader();
 		var text;
 		fr.onload = function() {
-
 			// read the content of the file
 			var decodedData = fr.result;
 
-			// parse the JSON file
-			myJson = JSON.parse(decodedData);
-
-			// get the namespaces table
-			table = document.getElementById("namespacesTable");
-
-			// retrieve namespaces
-			for (pr in myJson["namespaces"]) {
-				addNamespaceToAll(pr,myJson.namespaces[pr])
-			}
-
-			fixGlobalNamespaces(queryEditor)
-			fixGlobalNamespaces(updateEditor)
-			fixGlobalNamespaces(subEditor)
-
-
-			// retrieve the URLs
-			$("#host").val(myJson["host"]);
-			
-			$("#sparql11protocol").val(myJson["sparql11protocol"]["protocol"]);
-			$("#sparql11port").val(myJson["sparql11protocol"]["port"]);	
-			$("#updatePath").val(myJson["sparql11protocol"]["update"]["path"]);
-			$("#queryPath").val(myJson["sparql11protocol"]["query"]["path"]);
-			
-			ws = myJson["sparql11seprotocol"]["protocol"];
-			
-			$("#sparql11seprotocol").val(ws);
-			$("#sparql11seport").val(myJson["sparql11seprotocol"]["availableProtocols"][ws]["port"]);	
-			$("#subscribePath").val(myJson["sparql11seprotocol"]["availableProtocols"][ws]["path"]);
-			
-			// load queries
-			ul = document.getElementById("queryDropdown");
-			for (q in myJson["queries"]) {
-				li = document.createElement("li");
-				li.setAttribute("id", q);
-				li.innerHTML = q;
-				li.setAttribute("onclick",
-						"javascript:loadUQS(\"Q\", '" + q + "');");
-				li.setAttribute("data-toggle", "modal");
-				li.setAttribute("data-target", "#basicModal");
-				li.classList.add("dropdown-item");
-				li.classList.add("small");
-				ul.appendChild(li);
-			}
-			;
-			
-			// load subscribes
-			ul = document.getElementById("subscribeDropdown");
-			for (q in myJson["queries"]) {
-				li = document.createElement("li");
-				li.setAttribute("id", q);
-				li.innerHTML = q;
-				li.setAttribute("onclick",
-						"javascript:loadUQS(\"S\", '" + q + "');");
-				li.setAttribute("data-toggle", "modal");
-				li.setAttribute("data-target", "#basicModal");
-				li.classList.add("dropdown-item");
-				li.classList.add("small");
-				ul.appendChild(li);
-			}
-			;
-
-			// load updates
-			ul = document.getElementById("updateDropdown");
-			for (q in myJson["updates"]) {
-				li = document.createElement("li");
-				li.setAttribute("id", q);
-				li.innerHTML = q;
-				li.setAttribute("onclick", "javascript:loadUQS(\"U\", '"
-						+ q + "');");
-				li.setAttribute("data-toggle", "modal");
-				li.setAttribute("data-target", "#basicModal");
-				li.classList.add("dropdown-item");
-				li.classList.add("small");
-				ul.appendChild(li);
-			}
-			;
-
+			setJsap(JSON.parse(decodedData))
 		};
+		
 		fr.readAsText(file);
 	}
 };
@@ -309,11 +313,13 @@ function loadForcedBindings(u, id) {
 			for (fb in myJson[key][id]["forcedBindings"]) {
 
 				/*
-				 * <div class="input-group mb-3"> 
-				 * 	<div class="input-group-prepend"><span class="input-group-text">variable</span></div>
-				 * 	<input type="text" class="form-control" aria-label="Specify the binding value" id="variable name">
-				 *  <div class="input-group-append"> <span class="input-group-text">URI/literal</span></div>
-				 * </div>
+				 * <div class="input-group mb-3"> <div
+				 * class="input-group-prepend"><span
+				 * class="input-group-text">variable</span></div> <input
+				 * type="text" class="form-control" aria-label="Specify the
+				 * binding value" id="variable name"> <div
+				 * class="input-group-append"> <span
+				 * class="input-group-text">URI/literal</span></div> </div>
 				 */
 
 				span = document.createElement("span");
@@ -519,7 +525,7 @@ function subscribe() {
 			"aria-controls=\"pills-" + tabIndex + "\" " +
 			"aria-selected=\"false\">" + alias + "</a></li>");
 
-		// Create TAB content				
+		// Create TAB content
 		$("#pills-tabContent-subscriptions").append(
 			"<div class=\"tab-pane mt-3 fade\" " +
 			"id=\"pills-" + tabIndex + "\" " +
@@ -597,7 +603,7 @@ function subscribe() {
 			 * <td>Otto</td> <td>@mdo</td> </tr> <tr class="table-success">
 			 * <th scope="row">3</th> <td>Larry</td> <td>the Bird</td>
 			 * <td>@twitter</td> </tr> </tbody>
-			*/
+			 */
 
 			// iterate over the REMOVED bindings to fill the table
 			for (index in data["removedResults"]["results"]["bindings"]) {
