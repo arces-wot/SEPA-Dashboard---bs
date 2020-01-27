@@ -346,148 +346,34 @@ function loadJsap() {
 	}
 };
 
-function loadJsapFromJson(myJson) {
-	// get the namespaces table
-	table = document.getElementById("namespacesTable");
-
-	// retrieve namespaces
-	for (pr in myJson["namespaces"]) {
-		addNamespaceToAll(pr, myJson.namespaces[pr])
+function getForcedBindings(u) {
+	let fb = ""
+	switch (u) {
+		case "U":
+			fb = "#updateForcedBindings";
+			break;
+		case "Q":
+			fb = "#queryForcedBindings";
+			break;
+		case "S":
+			fb = "#subscribeForcedBindings";
+			break;
+		default:
+			throw "Cannot find forced binding type"
 	}
 
-	fixGlobalNamespaces(queryEditor)
-	fixGlobalNamespaces(updateEditor)
-	fixGlobalNamespaces(subEditor)
-
-
-	// retrieve the URLs
-	$("#host").val(myJson["host"]);
-
-	$("#sparql11protocol").val(myJson["sparql11protocol"]["protocol"]);
-	$("#sparql11port").val(myJson["sparql11protocol"]["port"]);
-	$("#updatePath").val(myJson["sparql11protocol"]["update"]["path"]);
-	$("#queryPath").val(myJson["sparql11protocol"]["query"]["path"]);
-
-	ws = myJson["sparql11seprotocol"]["protocol"];
-
-	$("#sparql11seprotocol").val(ws);
-	$("#sparql11seport").val(myJson["sparql11seprotocol"]["availableProtocols"][ws]["port"]);
-	$("#subscribePath").val(myJson["sparql11seprotocol"]["availableProtocols"][ws]["path"]);
-
-	// load queries
-	ul = document.getElementById("queryDropdown");
-	for (q in myJson["queries"]) {
-		li = document.createElement("li");
-		li.setAttribute("id", q);
-		li.innerHTML = q;
-		li.setAttribute("onclick",
-			"javascript:loadUQS(\"Q\", '" + q + "');");
-		li.setAttribute("data-toggle", "modal");
-		li.setAttribute("data-target", "#basicModal");
-		li.classList.add("dropdown-item");
-		li.classList.add("small");
-		ul.appendChild(li);
-	}
-	;
-
-	// load subscribes
-	ul = document.getElementById("subscribeDropdown");
-	for (q in myJson["queries"]) {
-		li = document.createElement("li");
-		li.setAttribute("id", q);
-		li.innerHTML = q;
-		li.setAttribute("onclick",
-			"javascript:loadUQS(\"S\", '" + q + "');");
-		li.setAttribute("data-toggle", "modal");
-		li.setAttribute("data-target", "#basicModal");
-		li.classList.add("dropdown-item");
-		li.classList.add("small");
-		ul.appendChild(li);
-	}
-	;
-
-	// load updates
-	ul = document.getElementById("updateDropdown");
-	for (q in myJson["updates"]) {
-		li = document.createElement("li");
-		li.setAttribute("id", q);
-		li.innerHTML = q;
-		li.setAttribute("onclick", "javascript:loadUQS(\"U\", '"
-			+ q + "');");
-		li.setAttribute("data-toggle", "modal");
-		li.setAttribute("data-target", "#basicModal");
-		li.classList.add("dropdown-item");
-		li.classList.add("small");
-		ul.appendChild(li);
-	}
-
-}
-
-//****************************************************//
-//** Validate a URI (includes delimiters in groups) **//
-//****************************************************//
-//- The different parts--along with their delimiters--are kept in their own
-//groups and can be recombined as $1$6$2$3$4$5$7$8$9
-//- groups are as follows:
-//1,6 == scheme:// or scheme:
-//2   == userinfo@
-//3   == host
-//4   == :port
-//5,7 == path (5 if it has an authority, 7 if it doesn't)
-//8   == ?query
-//9   == #fragment
-
-var regexUriDelim = /^(?:([a-z0-9+.-]+:\/\/)((?:(?:[a-z0-9-._~!$&'()*+,;=:]|%[0-9A-F]{2})*)@)?((?:[a-z0-9-._~!$&'()*+,;=]|%[0-9A-F]{2})*)(:(?:\d*))?(\/(?:[a-z0-9-._~!$&'()*+,;=:@\/]|%[0-9A-F]{2})*)?|([a-z0-9+.-]+:)(\/?(?:[a-z0-9-._~!$&'()*+,;=:@]|%[0-9A-F]{2})+(?:[a-z0-9-._~!$&'()*+,;=:@\/]|%[0-9A-F]{2})*)?)(\?(?:[a-z0-9-._~!$&'()*+,;=:\/?@]|%[0-9A-F]{2})*)?(#(?:[a-z0-9-._~!$&'()*+,;=:\/?@]|%[0-9A-F]{2})*)?$/i;
-
-var numbersOrBoolean = ["xsd:integer", "xsd:decimal", "xsd:double", "xsd:boolean", "http://www.w3.org/2001/XMLSchema#integer", "http://www.w3.org/2001/XMLSchema#decimal", "http://www.w3.org/2001/XMLSchema#double", "http://www.w3.org/2001/XMLSchema#boolean"];	
-
-function formatValue(value,datatype) {
-	if(datatype === "uri") {
-		try {
-			decodeURI(value);
-		} catch(e) { // catches a malformed URI
-			console.error(e);
-			return null;
-		}
-		
-		scheme = value.replace(regexUriDelim,"$1");
-		if (scheme != "") value = "<" +value + ">";
-		return value;
-	} else if (datatype === "literal") {
-		value = "'"+value+"'";
-		return value;
-	}
-	
-	if (numbersOrBoolean.includes(value)) return value;
-	
-	scheme = datatype.replace(regexUriDelim,"$1");
-	if (scheme != "") datatype = "<" +datatype + ">";
-	value = "'" + value + "'^^" + datatype;
-	return value;
-}
-
-function replaceBindings(u,sparql) {
-	if (u == "U") {
-		text = document.getElementById("updateTextInput").value;
-		fb = "#updateForcedBindings";
-	} else if (u == "Q") {
-		text = document.getElementById("queryTextInput").value;
-		fb = "#queryForcedBindings";
-	}
-	else {
-		text = document.getElementById("subscribeTextInput").value;
-		fb = "#subscribeForcedBindings";
-	}
-
-	$(fb).each(function() {
-		$(this).find(':input').each(function() {
-			binding = $(this).attr("id");
-			value = formatValue($(this).val(),$(this).attr("type"));
-			sparql = sparql.replace("?"+binding,value)
-		}); 
+	let result = {}
+	$(fb).each(function () {
+		$(this).find(':input').each(function () {
+			let binding = $(this).attr("id");
+			result[binding] = {
+				type: $(this).attr("type"),
+				value: $(this).val()
+			}
+		});
 	});
-	
-	return sparql;
+
+	return result;
 }
 
 function loadForcedBindings(u, id) {
@@ -612,8 +498,9 @@ function loadUQS(usq, uqname) {
 
 function query() {
 	// read the query
-	queryText = queryEditor.getValue()
-	queryText = replaceBindings("Q",queryText);
+	let queryText = queryEditor.getValue()
+	let bench = new Sepajs.bench()
+	queryText = bench.sparql(queryText,getForcedBindings("Q"))
 
 	const sepa = client;
 	
@@ -671,8 +558,9 @@ function clearQueryResults(){
 
 function update() {
 	// read the update
-	updateText = updateEditor.getValue()
-	updateText = replaceBindings("U",updateText);
+	let updateText= updateEditor.getValue()
+	let bench = new Sepajs.bench()
+	updateText = bench.sparql(updateText, getForcedBindings("U"));
 
 	config = {host : $("#host").val() , sparql11protocol : { protocol: $("#sparql11protocol").val(),"port" : $("#sparql11port").val() ,update :{ "path" : $("#updatePath").val()}}};
 	
@@ -695,8 +583,10 @@ function generateIdBySuggestion(suggestion) {
 }
 function subscribe() {
 	// read the query
-	subscribeText = subEditor.getValue();
-	subscribeText = replaceBindings("U",subscribeText);
+	let subscribeText = subEditor.getValue();
+	let bench = new Sepajs.bench()
+	subscribeText = bench.sparql(subscribeText, getForcedBindings("S"))
+
 	
 	ws = $("#sparql11seprotocol").val();
 	config = { host: $("#host").val(), sparql11seprotocol: { protocol: $("#sparql11seprotocol").val(), availableProtocols: {ws : {port : $("#sparql11seport").val() , path : $("#subscribePath").val()} } }};
