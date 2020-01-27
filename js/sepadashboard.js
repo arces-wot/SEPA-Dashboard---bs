@@ -34,13 +34,13 @@ const jsap = `{
 
 "host": "sepa.vaimee.it",
 	"oauth": {
-	"enable": true,
-		"register": "https://sepa.vaimee.it:443/oauth/register",
-			"tokenRequest": "https://sepa.vaimee.it:443/oauth/token"
+		"enable": true,
+		"register": "https://sepa.vaimee.it:8443/oauth/register",
+		"tokenRequest": "https://sepa.vaimee.it:8443/oauth/token"
 },
 "sparql11protocol": {
 	"protocol": "https",
-		"port": 443,
+		"port": 8443,
 			"query": {
 		"path": "/secure/query",
 			"method": "POST",
