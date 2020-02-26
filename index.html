@@ -1,82 +1,93 @@
 <html>
 
 <head>
-<title>SWAMP - Dynamic Linked Open Data</title>
+	<title>SWAMP - Dynamic Linked Open Data</title>
 
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Adapted from initial Fabio Viola version">
-<meta name="author" content="Fabio Viola">
-<meta name="author" content="Luca Roffia">
-<meta name="author" content="Cristiano Aguzzi">
-<link rel="icon" href="icon/swamp.png">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Adapted from initial Fabio Viola version">
+	<meta name="author" content="Fabio Viola">
+	<meta name="author" content="Luca Roffia">
+	<meta name="author" content="Cristiano Aguzzi">
+	<meta name="theme-color" content="#007bff">
 
-<script src="jsap/swamp.js"></script>
+	<link rel="icon" href="icon/swamp.png">
 
-<!-- Bootstrap CSS -->
-<link rel="stylesheet"
-	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-	crossorigin="anonymous">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+		integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-<!-- Sepa dashboard -->
-<link rel="stylesheet"
-	href="fontawesome-free-5.0.6/web-fonts-with-css/css/fontawesome-all.css">
-<link rel="stylesheet" href="css/dashboard.css">
-<link
-	href='http://cdn.jsdelivr.net/npm/yasgui-yasqe@2.11.22/dist/yasqe.min.css'
-	rel='stylesheet' type='text/css' />
-<meta name="theme-color" content="#007bff">
+	<!-- Sepa dashboard -->
+	<link rel="stylesheet" href="fontawesome-free-5.0.6/web-fonts-with-css/css/fontawesome-all.css">
+	<link rel="stylesheet" href="css/dashboard.css">
+	<link rel='stylesheet' href='http://cdn.jsdelivr.net/npm/yasgui-yasqe@2.11.22/dist/yasqe.min.css' type='text/css' />
+
+
+	<script src="https://cdn.jsdelivr.net/npm/@arces-wot/sepa-js@0.10.0/web/sepa.js"></script>
+	<script src="js/sepadashboard.js" type="text/javascript"></script>
+	<script src="jsap/swamp.js"></script>
+
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+		integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+		integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+		crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+		integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+		crossorigin="anonymous"></script>
+
+	<!-- Optional JavaScript -->
+	<script src='http://cdn.jsdelivr.net/npm/yasgui-yasqe@2.11.22/dist/yasqe.bundled.min.js'></script>
 
 </head>
 
 <body onload="onInit()">
 	<nav class="navbar">
-		<a class="navbar-brand" href="#"> <img src="icon/swamp.png"
-			width="28" class="d-inline-block align-top" alt=""> SWAMP- Dynamic Linked Open Data
+		<a class="navbar-brand" href="#"> <img src="icon/swamp.png" width="28" class="d-inline-block align-top" alt="">
+			SWAMP- Dynamic Linked Open Data
 		</a>
 	</nav>
 
 	<ul class="nav nav-pills ml-3" id="pills-tab" role="tablist">
-<!-- 		<li class="nav-item"><a class="nav-link active" -->
-<!-- 			id="pills-configure-tab" data-toggle="pill" href="#pills-configure" -->
-<!-- 			role="tab" aria-controls="pills-configure" aria-selected="true">Configure</a></li> -->
-<!-- 		<li class="nav-item"><a class="nav-link" id="pills-update-tab" -->
-<!-- 			data-toggle="pill" data-target="#pills-update" href="#pills-update" -->
-<!-- 			role="tab" aria-controls="pills-update" aria-selected="false">Update</a></li> -->
-		<li class="nav-item"><a class="nav-link active" id="pills-query-tab"
-			data-toggle="pill" href="#pills-query" role="tab"
-			aria-controls="pills-query" aria-selected="true">Query</a></li>
-		<li class="nav-item"><a class="nav-link" id="pills-subscribe-tab"
-			data-toggle="pill" href="#pills-subscribe" role="tab"
-			aria-controls="pills-subscribe" aria-selected="false">Subscribe</a></li>
-		<li class="nav-item"><a class="nav-link" id="pills-help-tab"
-			data-toggle="pill" href="#pills-help" role="tab"
-			aria-controls="pills-help" aria-selected="false">Help</a></li>
+		<!-- 		<li class="nav-item"><a class="nav-link active" -->
+		<!-- 			id="pills-configure-tab" data-toggle="pill" href="#pills-configure" -->
+		<!-- 			role="tab" aria-controls="pills-configure" aria-selected="true">Configure</a></li> -->
+		<!-- 		<li class="nav-item"><a class="nav-link" id="pills-update-tab" -->
+		<!-- 			data-toggle="pill" data-target="#pills-update" href="#pills-update" -->
+		<!-- 			role="tab" aria-controls="pills-update" aria-selected="false">Update</a></li> -->
+		<li class="nav-item"><a class="nav-link active" id="pills-query-tab" data-toggle="pill" href="#pills-query"
+				role="tab" aria-controls="pills-query" aria-selected="true">Query</a></li>
+		<li class="nav-item"><a class="nav-link" id="pills-subscribe-tab" data-toggle="pill" href="#pills-subscribe"
+				role="tab" aria-controls="pills-subscribe" aria-selected="false">Subscribe</a></li>
+		<li class="nav-item"><a class="nav-link" id="pills-help-tab" data-toggle="pill" href="#pills-help" role="tab"
+				aria-controls="pills-help" aria-selected="false">Help</a></li>
 	</ul>
 
 	<div class="tab-content" id="pills-tabContent">
 
 		<!-- QUERY TAB -->
-		<div class="tab-pane fade show active mt-3" id="pills-query" role="tabpanel"
-			aria-labelledby="pills-query-tab">
+		<div class="tab-pane fade show active mt-3" id="pills-query" role="tabpanel" aria-labelledby="pills-query-tab">
 
 			<div class="card rounded-3 ml-3 mr-3">
 				<div class="card-header bg-primary text-white" id="queryPanel">
-					<i class="fas fa-search"></i> <label for="queryDropdownMenu"
-						class="col-form-label-sm mr-3" id="queryLabel">Query</label>
-					<button class="btn btn-default dropdown-toggle btn-sm float-right"
-						type="button" id="queryDropdownMenu" data-toggle="dropdown"
-						aria-haspopup="true" aria-expanded="true">Queries</button>
-					<ul class="dropdown-menu float-right"
-						aria-labelledby="queryDropdownMenu" id="queryDropdown">
+					<i class="fas fa-search"></i> <label for="queryDropdownMenu" class="col-form-label-sm mr-3"
+						id="queryLabel">Query</label>
+					<!-- 					<button class="btn btn-default dropdown-toggle btn-sm float-right" type="button" -->
+					<!-- 						id="queryDropdownMenu" data-toggle="dropdown" aria-haspopup="true" -->
+					<!-- 						aria-expanded="true">Queries</button> -->
+					<button class="btn btn-light float-right dropdown-toggle btn-sm" type="button"
+						id="queryDropdownMenu" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="true">Queries</button>
+					<ul class="dropdown-menu float-right" aria-labelledby="queryDropdownMenu" id="queryDropdown">
 					</ul>
 				</div>
 
 				<div class="card-body">
 					<div class="row">
-						<textarea class="form-control form-control-sm" id="queryTextInput">SELECT ?time WHERE { &lt;http://sepatest/currentTime&gt; &lt;http://sepatest/hasValue&gt; ?time }</textarea>
+						<textarea class="form-control form-control-sm" id="queryTextInput">SELECT ?time WHERE {
+							&lt;http://sepatest/currentTime&gt; &lt;http://sepatest/hasValue&gt; ?time }</textarea>
 					</div>
 
 					<div class="row mt-3" id="queryForcedBindings"></div>
@@ -85,12 +96,10 @@
 						info</div>
 
 					<div class="row mt-3 justify-content-center">
-						<button type="button" class="btn btn-primary"
-							onclick="javascript:query();">
+						<button type="button" class="btn btn-primary" onclick="javascript:query();">
 							<small><i class="fas fa-share-square"></i>&nbsp;Query</small>
 						</button>
-						<button type="button"
-							class="btn btn-outline-danger float-right ml-3"
+						<button type="button" class="btn btn-outline-danger float-right ml-3"
 							onclick="javascript:clearQueryResults();">
 							<small><i class="fas fa-ban"></i>&nbsp;Clear</small>
 						</button>
@@ -102,14 +111,13 @@
 
 					<div class="row flex-row-reverse">
 						<label><span class="badge badge-pill badge-info">Literal</span>&nbsp;
-						<span class="badge badge-pill badge-success mr-3">URI</span> </label>
+							<span class="badge badge-pill badge-success mr-3">URI</span> </label>
 					</div>
 
 
 					<div class="row">
 						<div class="table-responsive">
-							<table class="table table-sm table-bordered table-hover"
-								id="queryTable">
+							<table class="table table-sm table-bordered table-hover" id="queryTable">
 								<thead class="thead-light">
 									<tr></tr>
 								</thead>
@@ -125,36 +133,35 @@
 		</div>
 
 		<!-- UPDATE TAB -->
-		<div class="tab-pane fade mt-3" id="pills-update" role="tabpanel"
-			aria-labelledby="pills-update-tab">
+		<div class="tab-pane fade mt-3" id="pills-update" role="tabpanel" aria-labelledby="pills-update-tab">
 
 			<div class="card rounded-3 ml-3 mr-3">
-				<div class="card-header rounded-3 bg-primary text-white"
-					id="updatePanel">
+				<div class="card-header rounded-3 bg-primary text-white" id="updatePanel">
 
-					<i class="fas fa-cloud-upload-alt"></i> <label
-						for="updateDropdownMenu" class="col-form-label-sm mr-3"
-						id="updateLabel">Update</label>
-					<button class="btn btn-default dropdown-toggle btn-sm float-right"
-						type="button" id="updateDropdownMenu" data-toggle="dropdown"
-						aria-haspopup="true" aria-expanded="true">Updates</button>
-					<ul class="dropdown-menu float-right"
-						aria-labelledby="updateDropdownMenu" id="updateDropdown">
+					<i class="fas fa-cloud-upload-alt"></i> <label for="updateDropdownMenu"
+						class="col-form-label-sm mr-3" id="updateLabel">Update</label>
+					<button class="btn btn-light float-right dropdown-toggle btn-sm" type="button"
+						id="updateDropdownMenu" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="true">Updates</button>
+					<ul class="dropdown-menu float-right" aria-labelledby="updateDropdownMenu" id="updateDropdown">
 					</ul>
 				</div>
 
 				<div class="card-body">
 
 					<div class="row">
-						<textarea class="form-control form-control-sm"
-							id="updateTextInput">DELETE {GRAPH &lt;http://sepatest/graph&gt; {&lt;http://sepatest/currentTime&gt; &lt;http://sepatest/hasValue&gt; ?oldTimestamp}} INSERT {GRAPH &lt;http://sepatest/graph&gt; {&lt;http://sepatest/currentTime&gt; &lt;http://sepatest/hasValue&gt; ?timestamp }} WHERE {OPTIONAL{&lt;http://sepatest/currentTime&gt; &lt;http://sepatest/hasValue&gt; ?oldTimestamp} . BIND(now() AS ?timestamp)}</textarea>
+						<textarea class="form-control form-control-sm" id="updateTextInput">DELETE {GRAPH
+							&lt;http://sepatest/graph&gt; {&lt;http://sepatest/currentTime&gt;
+							&lt;http://sepatest/hasValue&gt; ?oldTimestamp}} INSERT {GRAPH &lt;http://sepatest/graph&gt;
+							{&lt;http://sepatest/currentTime&gt; &lt;http://sepatest/hasValue&gt; ?timestamp }} WHERE
+							{OPTIONAL{&lt;http://sepatest/currentTime&gt; &lt;http://sepatest/hasValue&gt;
+							?oldTimestamp} . BIND(now() AS ?timestamp)}</textarea>
 					</div>
 
 					<div class="row mt-3" id="updateForcedBindings"></div>
 
 					<div class="row justify-content-center mt-3">
-						<button type="button" class="btn btn-primary"
-							onclick="javascript:update();">
+						<button type="button" class="btn btn-primary" onclick="javascript:update();">
 							<small><i class="fas fa-share-square"></i>&nbsp;Update</small>
 						</button>
 					</div>
@@ -166,22 +173,20 @@
 		</div>
 
 		<!-- SUBSCRIBE TAB -->
-		<div class="tab-pane fade  mt-3" id="pills-subscribe" role="tabpanel"
-			aria-labelledby="pills-subscribe-tab">
+		<div class="tab-pane fade  mt-3" id="pills-subscribe" role="tabpanel" aria-labelledby="pills-subscribe-tab">
 
 			<!-- CARD SUBSCRIBE border-primary m-1 mt-0-->
 			<div class="card rounded-3 ml-3 mr-3">
 				<!--   small text-white bg-primary rounded-0 font-weight-light -->
 
-				<div class="card-header rounded-3 bg-primary text-white"
-					id="queryPanel">
-					<i class="fas fa-rocket"></i> <label for="subscribeDropdownMenu"
-						class="col-form-label-sm mr-3" id="subscribeLabel">Subscribe</label>
-					<button class="btn btn-default dropdown-toggle btn-sm float-right"
-						type="button" id="subscribeDropdownMenu" data-toggle="dropdown"
-						aria-haspopup="true" aria-expanded="true">Subscribes</button>
-					<ul class="dropdown-menu float-right"
-						aria-labelledby="subscribeDropdownMenu" id="subscribeDropdown">
+				<div class="card-header rounded-3 bg-primary text-white" id="queryPanel">
+					<i class="fas fa-rocket"></i> <label for="subscribeDropdownMenu" class="col-form-label-sm mr-3"
+						id="subscribeLabel">Subscribe</label>
+					<button class="btn btn-light float-right dropdown-toggle btn-sm" type="button"
+						id="subscribeDropdownMenu" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="true">Subscribes</button>
+					<ul class="dropdown-menu float-right" aria-labelledby="subscribeDropdownMenu"
+						id="subscribeDropdown">
 					</ul>
 				</div>
 
@@ -190,8 +195,8 @@
 					<!-- FORM FOR SUBSCRIBES -->
 					<form>
 						<div class="row mb-3">
-							<textarea class="form-control form-control-sm"
-								id="subscribeTextInput">SELECT ?time WHERE { &lt;http://sepatest/currentTime&gt; &lt;http://sepatest/hasValue&gt; ?time }</textarea>
+							<textarea class="form-control form-control-sm" id="subscribeTextInput">SELECT ?time WHERE {
+								&lt;http://sepatest/currentTime&gt; &lt;http://sepatest/hasValue&gt; ?time }</textarea>
 						</div>
 						<!-- <div class="form-group">
 							<label for="queryInput" class="col-form-label-sm"
@@ -211,16 +216,14 @@
 							<div class="input-group-prepend">
 								<span class="input-group-text" id="basic-addon1">Alias</span>
 							</div>
-							<input type="text" class="form-control" placeholder="Username"
-								value="TEST" aria-label="Username"
-								aria-describedby="basic-addon1" id="subscriptionAlias">
+							<input type="text" class="form-control" placeholder="Username" value="TEST"
+								aria-label="Username" aria-describedby="basic-addon1" id="subscriptionAlias">
 						</div>
 
 						<div class="row mt-3" id="subscribeForcedBindings"></div>
 
 						<div class="form-group" align="center">
-							<button type="button" class="btn btn-primary"
-								onclick="javascript:subscribe();">
+							<button type="button" class="btn btn-primary" onclick="javascript:subscribe();">
 								<small><i class="fas fa-share-square"></i>&nbsp;Subscribe</small>
 							</button>
 						</div>
@@ -231,14 +234,12 @@
 
 			<!-- CARD active subscriptions -->
 			<div class="card rounded-3 ml-3 mr-3 mt-3">
-				<div class="card-header rounded-3 bg-primary text-white"
-					id="subscribePanel">
+				<div class="card-header rounded-3 bg-primary text-white" id="subscribePanel">
 					<i class="fas fa-bolt"></i>&nbsp;Active subscriptions
 				</div>
 
 				<div class="card-body" id="activeSubscriptions">
-					<ul class="nav nav-pills" id="pills-tab-subscriptions"
-						role="tablist"></ul>
+					<ul class="nav nav-pills" id="pills-tab-subscriptions" role="tablist"></ul>
 					<div class="tab-content" id="pills-tabContent-subscriptions"></div>
 
 				</div>
@@ -248,18 +249,17 @@
 		</div>
 
 		<!-- CONFIGURE TAB -->
-		<div class="tab-pane fade mt-3" id="pills-configure"
-			role="tabpanel" aria-labelledby="pills-configure-tab">
+		<div class="tab-pane fade mt-3" id="pills-configure" role="tabpanel" aria-labelledby="pills-configure-tab">
 			<div class="container-fluid">
 				<div class="input-group mb-3">
 					<div class="custom-file">
 						<input type="file" class="custom-file-input" id="loadJsap"
-							aria-describedby="inputGroupFileAddon04"> <label
-							class="custom-file-label" for="loadJsap">Select JSAP file</label>
+							aria-describedby="inputGroupFileAddon04"> <label class="custom-file-label"
+							for="loadJsap">Select JSAP file</label>
 					</div>
 					<div class="input-group-append">
-						<button class="btn btn-outline-secondary" type="button"
-							id="inputGroupFileAddon04" onclick="javascript:loadJsap()">Load</button>
+						<button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04"
+							onclick="javascript:loadJsap()">Load</button>
 					</div>
 				</div>
 
@@ -274,8 +274,7 @@
 							<div class="input-group-prepend">
 								<span class="input-group-text" id="basic-addon1">Host</span>
 							</div>
-							<input type="text" class="form-control"
-								value="mml.arces.unibo.it" id="host">
+							<input type="text" class="form-control" value="mml.arces.unibo.it" id="host">
 						</div>
 
 						<label class="col-form-label-sm mt-3"><b>SPARQL 1.1
@@ -286,25 +285,21 @@
 							<div class="input-group-prepend">
 								<span class="input-group-text" id="basic-addon1">Protocol</span>
 							</div>
-							<input type="text" class="form-control" value="http"
-								id="sparql11protocol">
+							<input type="text" class="form-control" value="http" id="sparql11protocol">
 							<div class="input-group-prepend">
 								<span class="input-group-text" id="basic-addon1">Port</span>
 							</div>
-							<input type="text" class="form-control" value="8000"
-								id="sparql11port">
+							<input type="text" class="form-control" value="8000" id="sparql11port">
 							<div class="input-group-prepend">
 								<span class="input-group-text" id="basic-addon1">Update
 									path</span>
 							</div>
-							<input type="text" class="form-control" value="/update"
-								id="updatePath">
+							<input type="text" class="form-control" value="/update" id="updatePath">
 							<div class="input-group-prepend">
 								<span class="input-group-text" id="basic-addon1">Query
 									path</span>
 							</div>
-							<input type="text" class="form-control" value="/query"
-								id="queryPath">
+							<input type="text" class="form-control" value="/query" id="queryPath">
 						</div>
 
 						<label class="col-form-label-sm mt-3"><b>SPARQL 1.1
@@ -314,19 +309,16 @@
 							<div class="input-group-prepend">
 								<span class="input-group-text" id="basic-addon1">Protocol</span>
 							</div>
-							<input type="text" class="form-control" value="ws"
-								id="sparql11seprotocol">
+							<input type="text" class="form-control" value="ws" id="sparql11seprotocol">
 							<div class="input-group-prepend mb">
 								<span class="input-group-text" id="basic-addon1">Port</span>
 							</div>
-							<input type="text" class="form-control" value="9000"
-								id="sparql11seport">
+							<input type="text" class="form-control" value="9000" id="sparql11seport">
 							<div class="input-group-prepend">
 								<span class="input-group-text" id="basic-addon1">Subscribe
 									path</span>
 							</div>
-							<input type="text" class="form-control" value="/subscribe"
-								id="subscribePath">
+							<input type="text" class="form-control" value="/subscribe" id="subscribePath">
 						</div>
 					</div>
 				</div>
@@ -341,9 +333,8 @@
 								<div class="input-group-prepend">
 									<span class="input-group-text" id="basic-addon1">Prefix</span>
 								</div>
-								<input type="text" class="form-control" placeholder="Username"
-									value="wot-at-arces" aria-label="Username"
-									aria-describedby="basic-addon1" id="prefixField">
+								<input type="text" class="form-control" placeholder="Username" value="wot-at-arces"
+									aria-label="Username" aria-describedby="basic-addon1" id="prefixField">
 								<div class="input-group-prepend">
 									<span class="input-group-text" id="basic-addon1">Namespace</span>
 								</div>
@@ -352,16 +343,13 @@
 									aria-describedby="basic-addon1" id="namespaceField">
 							</div>
 							<div class="form-group" align="center">
-								<button type="button" class="btn btn-primary"
-									onclick="javascript:addNamespace();">
+								<button type="button" class="btn btn-primary" onclick="javascript:addNamespace();">
 									<small><i class="fas fa-edit"></i>&nbsp;Add</small>
 								</button>
 							</div>
 						</form>
 						<br>
-						<table
-							class="table table-bordered table-hover table-condensed table-sm"
-							id="namespacesTable">
+						<table class="table table-bordered table-hover table-condensed table-sm" id="namespacesTable">
 							<tr>
 								<th>Prefix</th>
 								<th>Namespace</th>
@@ -375,8 +363,7 @@
 		</div>
 
 		<!-- HELP TAB -->
-		<div class="tab-pane fade mt-3" id="pills-help" role="tabpanel"
-			aria-labelledby="pills-help-tab">
+		<div class="tab-pane fade mt-3" id="pills-help" role="tabpanel" aria-labelledby="pills-help-tab">
 			<div class="container-fluid">
 				<div class="card border rounded-3 mb-3">
 					<div class="card-header rounded-3 text-white bg-primary">
@@ -384,16 +371,16 @@
 					</div>
 					<div class="card-body">
 						<div class="alert alert-primary" role="alert">
-							<a href="https://www.w3.org/TR/sparql11-update/"
-								class="alert-link">SPARQL 1.1 Update Language</a>
+							<a href="https://www.w3.org/TR/sparql11-update/" class="alert-link">SPARQL 1.1 Update
+								Language</a>
 						</div>
 						<div class="alert alert-primary" role="alert">
-							<a href="https://www.w3.org/TR/sparql11-query/"
-								class="alert-link">SPARQL 1.1 Query Language</a>
+							<a href="https://www.w3.org/TR/sparql11-query/" class="alert-link">SPARQL 1.1 Query
+								Language</a>
 						</div>
 						<div class="alert alert-primary" role="alert">
-							<a href="https://www.w3.org/TR/sparql11-protocol/"
-								class="alert-link">SPARQL 1.1 Protocol</a>
+							<a href="https://www.w3.org/TR/sparql11-protocol/" class="alert-link">SPARQL 1.1
+								Protocol</a>
 						</div>
 					</div>
 				</div>
@@ -404,20 +391,20 @@
 					</div>
 					<div class="card-body">
 						<div class="alert alert-warning" role="alert">
-							<a href="http://mml.arces.unibo.it/TR/sepa.html"
-								class="alert-link">SPARQL Event Processing Architecture</a>
+							<a href="http://mml.arces.unibo.it/TR/sepa.html" class="alert-link">SPARQL Event Processing
+								Architecture</a>
 						</div>
 						<div class="alert alert-warning" role="alert">
-							<a href="http://mml.arces.unibo.it/TR/sparql11-se-protocol.html"
-								class="alert-link">SPARQL 1.1 Secure Event Protocol</a>
+							<a href="http://mml.arces.unibo.it/TR/sparql11-se-protocol.html" class="alert-link">SPARQL
+								1.1 Secure Event Protocol</a>
 						</div>
 						<div class="alert alert-warning" role="alert">
-							<a href="http://mml.arces.unibo.it/TR/sparql11-subscribe.html"
-								class="alert-link">SPARQL 1.1 Subscribe Language</a>
+							<a href="http://mml.arces.unibo.it/TR/sparql11-subscribe.html" class="alert-link">SPARQL 1.1
+								Subscribe Language</a>
 						</div>
 						<div class="alert alert-warning" role="alert">
-							<a href="http://mml.arces.unibo.it/TR/jsap.html"
-								class="alert-link">JSON SPARQL Application Profile</a>
+							<a href="http://mml.arces.unibo.it/TR/jsap.html" class="alert-link">JSON SPARQL Application
+								Profile</a>
 						</div>
 					</div>
 				</div>
@@ -441,27 +428,6 @@
 			</div>
 		</div>
 	</div>
-
-	<!-- Optional JavaScript -->
-	<script
-		src="https://cdn.jsdelivr.net/npm/@arces-wot/sepa-js@0.10.0/web/sepa.js"></script>
-	<script type="text/javascript" src="js/sepadashboard.js"></script>
-
-	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-		crossorigin="anonymous"></script>
-
-	<script
-		src='http://cdn.jsdelivr.net/npm/yasgui-yasqe@2.11.22/dist/yasqe.bundled.min.js'></script>
-
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-		integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-		crossorigin="anonymous"></script>
-	<script
-		src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
-		integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-		crossorigin="anonymous"></script>
 </body>
+
 </html>
