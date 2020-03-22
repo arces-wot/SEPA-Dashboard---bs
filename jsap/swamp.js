@@ -40,28 +40,38 @@ jsap = {
 		"sosa": "http://www.w3.org/ns/sosa/",
 		"qudt": "http://qudt.org/schema/qudt#",
 		"unit": "http://qudt.org/vocab/unit#",
-		"arces-monitor": "http://wot.arces.unibo.it/monitor#",
-		"swamp": "http://swamp-project.org/ns#",
-		"mqtt": "http://wot.arces.unibo.it/mqtt#",
+		"covid19": "http://covid19#",
 		"time": "http://www.w3.org/2006/time#",
 		"wgs84_pos": "http://www.w3.org/2003/01/geo/wgs84_pos#",
 		"gn": "http://www.geonames.org/ontology#"
 	},
 	"queries" : {
-		"PLACES": {
-			"sparql": "SELECT * WHERE {GRAPH <http://wot.arces.unibo.it/context> {?place rdf:type schema:Place; schema:name ?name ;  schema:GeoCoordinates ?coordinate . ?coordinate schema:latitude ?lat ; schema:longitude ?long}}"
+		"OBSERVATIONS_COUNT": {
+			"sparql": "SELECT (COUNT(?observation) AS ?count) WHERE {GRAPH <http://covid19/observation> {?observation rdf:type sosa:Observation}}"
 		},
 		"OBSERVATIONS": {
-			"sparql": "SELECT * WHERE {GRAPH <http://wot.arces.unibo.it/observation> {?observation rdf:type sosa:Observation ; rdfs:label ?label ; sosa:hasResult ?quantity ; sosa:hasFeatureOfInterest ?location . ?quantity rdf:type qudt:QuantityValue ; qudt:unit ?unit . OPTIONAL {?quantity qudt:numericValue ?value} . OPTIONAL {?observation sosa:resultTime ?timestamp}} . GRAPH <http://wot.arces.unibo.it/context> {?location schema:name ?name} . OPTIONAL{?unit qudt:symbol ?symbol} }"
+			"sparql": "SELECT * WHERE {GRAPH <http://covid19/observation> {?observation rdf:type sosa:Observation ; sosa:hasFeatureOfInterest ?place ; sosa:resultTime ?timestamp ; sosa:hasSimpleResult ?value ; sosa:observedProperty ?property . ?property rdfs:label ?label} GRAPH <http://covid19/context> {?place gn:name ?name ;  gn:lat ?lat ; gn:long ?lon}}"
 		},
-		"MQTT_BROKERS": {
-			"sparql": "SELECT * WHERE { GRAPH <http://wot.arces.unibo.it/mqtt> {?broker mqtt:url ?url ; rdf:type mqtt:Broker ; mqtt:port ?port ; mqtt:sslProtocol ?sslProtocol ; mqtt:user ?user ; mqtt:password ?password ; mqtt:sslCA ?caFile ; mqtt:clientId ?clientId}}"
+		"OBSERVABLE_PROPERTIES": {
+			"sparql": "SELECT * WHERE {GRAPH <http://covid19/observation> {?property rdf:type sosa:ObservableProperty ; rdfs:label ?label}}"
 		},
-		"MQTT_MAPPINGS": {
-			"sparql": "SELECT * {GRAPH <http://wot.arces.unibo.it/mqtt> {?mapping rdf:type mqtt:Mapping ; mqtt:observation ?observation ; mqtt:topic ?topic}}"
+		"PLACES_COUNT": {
+			"sparql": "SELECT (COUNT(?place) AS ?count) WHERE {GRAPH <http://covid19/context> {?place rdf:type gn:Feature}}"
 		},
-		"MQTT_MESSAGES": {
-			"sparql": "SELECT * WHERE {GRAPH <http://wot.arces.unibo.it/mqtt/message> {?message rdf:type mqtt:Message ; mqtt:value ?value ; mqtt:topic ?topic ; mqtt:hasBroker ?broker;  time:inXSDDateTimeStamp ?timestamp}}"
+		"PLACES": {
+			"sparql": "SELECT * WHERE {GRAPH <http://covid19/context> {?place rdf:type gn:Feature; gn:contryCode ?code ; gn:featureClass ?class ; gn:name ?name ;  gn:lat ?lat ; gn:long ?lon . OPTIONAL {?place gn:parentFeature ?parent}}}"
+		},
+		"MAP_PLACES": {
+			"sparql": "SELECT * WHERE {GRAPH <http://covid19/context> {?place rdf:type gn:Feature; gn:contryCode ?code ; gn:featureClass ?class ; gn:name ?name ;  gn:lat ?lat ; gn:long ?lon . FILTER NOT EXISTS {?place gn:parentFeature ?parent}}}"
+		},
+		"CONTAINED_PLACES": {
+			"sparql": "SELECT * WHERE {GRAPH <http://covid19/context> {?child gn:parentFeature ?root ; gn:name ?name}}",
+			"forcedBindings": {
+				"root": {
+					"type": "uri",
+					"value": "http://covid19/Italy/Region/Emilia_Romagna"
+				}
+			}
 		}
 	}
 };
