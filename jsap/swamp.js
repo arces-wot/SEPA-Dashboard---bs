@@ -49,8 +49,11 @@ jsap = {
 		"OBSERVATIONS_COUNT": {
 			"sparql": "SELECT (COUNT(?observation) AS ?count) WHERE {GRAPH <http://covid19/observation> {?observation rdf:type sosa:Observation}}"
 		},
-		"OBSERVATIONS": {
+		"SIMPLE_OBSERVATIONS": {
 			"sparql": "SELECT * WHERE {GRAPH <http://covid19/observation> {?observation rdf:type sosa:Observation ; sosa:hasFeatureOfInterest ?place ; sosa:resultTime ?timestamp ; sosa:hasSimpleResult ?value ; sosa:observedProperty ?property . ?property rdfs:label ?label} GRAPH <http://covid19/context> {?place gn:name ?name ;  gn:lat ?lat ; gn:long ?lon}}"
+		},
+		"OBSERVATIONS": {
+			"sparql": "SELECT * WHERE {GRAPH <http://covid19/observation> {?observation rdf:type sosa:Observation ; sosa:hasFeatureOfInterest ?place ; sosa:resultTime ?timestamp ; sosa:hasResult ?result ; sosa:observedProperty ?property . ?result rdf:type qudt:QuantityValue ; qudt:unit ?unit ; qudt:numericValue ?value . ?property rdfs:label ?label} GRAPH <http://covid19/context> {?place gn:name ?name ;  gn:lat ?lat ; gn:long ?lon} OPTIONAL {?unit qudt:symbol ?symbol}}"
 		},
 		"OBSERVABLE_PROPERTIES": {
 			"sparql": "SELECT * WHERE {GRAPH <http://covid19/observation> {?property rdf:type sosa:ObservableProperty ; rdfs:label ?label}}"
@@ -69,7 +72,7 @@ jsap = {
 			"forcedBindings": {
 				"root": {
 					"type": "uri",
-					"value": "http://covid19/Italy/Region/Emilia_Romagna"
+					"value": "covid19:Place"
 				}
 			}
 		}
