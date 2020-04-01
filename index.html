@@ -12,7 +12,7 @@
 	<meta name="author" content="Cristiano Aguzzi">
 	<meta name="theme-color" content="#007bff">
 
-	<link rel="icon" href="icon/covid-19-icon.png">
+	<link rel="icon" href="icon/covid19.png">
 
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -45,7 +45,7 @@
 
 <body onload="onInit()">
 	<nav class="navbar">
-		<a class="navbar-brand" href="#"> <img src="icon/covid-19-icon.png" width="28" class="d-inline-block align-top" alt="">
+		<a class="navbar-brand" href="#"> <img src="icon/covid19.png" width="28" class="d-inline-block align-top" alt="">
 			COVID-19 Linked Open Data Portal
 		</a>
 	</nav>
@@ -86,8 +86,7 @@
 
 				<div class="card-body">
 					<div class="row">
-						<textarea class="form-control form-control-sm" id="queryTextInput">SELECT ?time WHERE {
-							&lt;http://sepatest/currentTime&gt; &lt;http://sepatest/hasValue&gt; ?time }</textarea>
+						<textarea class="form-control form-control-sm" id="queryTextInput">SELECT * FROM &lt;http://covid19/observation/context&gt; WHERE {?property rdf:type sosa:ObservableProperty ; rdfs:label ?label}</textarea>
 					</div>
 
 					<div class="row mt-3" id="queryForcedBindings"></div>
@@ -150,12 +149,8 @@
 				<div class="card-body">
 
 					<div class="row">
-						<textarea class="form-control form-control-sm" id="updateTextInput">DELETE {GRAPH
-							&lt;http://sepatest/graph&gt; {&lt;http://sepatest/currentTime&gt;
-							&lt;http://sepatest/hasValue&gt; ?oldTimestamp}} INSERT {GRAPH &lt;http://sepatest/graph&gt;
-							{&lt;http://sepatest/currentTime&gt; &lt;http://sepatest/hasValue&gt; ?timestamp }} WHERE
-							{OPTIONAL{&lt;http://sepatest/currentTime&gt; &lt;http://sepatest/hasValue&gt;
-							?oldTimestamp} . BIND(now() AS ?timestamp)}</textarea>
+						<textarea class="form-control form-control-sm" id="updateTextInput">SELECT * FROM \<http://covid19/observation/context\> 
+						WHERE {?property rdf:type sosa:ObservableProperty ; rdfs:label ?label}</textarea>
 					</div>
 
 					<div class="row mt-3" id="updateForcedBindings"></div>
@@ -195,8 +190,9 @@
 					<!-- FORM FOR SUBSCRIBES -->
 					<form>
 						<div class="row mb-3">
-							<textarea class="form-control form-control-sm" id="subscribeTextInput">SELECT ?time WHERE {
-								&lt;http://sepatest/currentTime&gt; &lt;http://sepatest/hasValue&gt; ?time }</textarea>
+							<textarea class="form-control form-control-sm" id="subscribeTextInput">
+							SELECT * FROM &lt;http://covid19/observation/context&gt; 
+							WHERE {?property rdf:type sosa:ObservableProperty ; rdfs:label ?label}</textarea>
 						</div>
 						<!-- <div class="form-group">
 							<label for="queryInput" class="col-form-label-sm"
