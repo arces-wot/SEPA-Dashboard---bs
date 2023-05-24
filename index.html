@@ -74,7 +74,7 @@
 
 				<div class="card-body">
 					<div class="row">
-						<textarea class="form-control form-control-sm" id="queryTextInput">SELECT ?time WHERE { &lt;http://sepatest/currentTime&gt; &lt;http://sepatest/hasValue&gt; ?time }</textarea>
+						<textarea class="form-control form-control-sm" id="queryTextInput">SELECT ?time WHERE { GRAPH &lt;http://sepatest/graph&gt; {&lt;http://sepatest/currentTime&gt; &lt;http://sepatest/hasValue&gt; ?time }}</textarea>
 					</div>
 
 					<div class="row mt-3" id="queryForcedBindings"></div>
@@ -189,7 +189,7 @@
 					<form>
 						<div class="row mb-3">
 							<textarea class="form-control form-control-sm"
-								id="subscribeTextInput">SELECT ?time WHERE { &lt;http://sepatest/currentTime&gt; &lt;http://sepatest/hasValue&gt; ?time }</textarea>
+								id="subscribeTextInput">SELECT ?time WHERE { GRAPH &lt;http://sepatest/graph&gt; {&lt;http://sepatest/currentTime&gt; &lt;http://sepatest/hasValue&gt; ?time }}</textarea>
 						</div>
 						<!-- <div class="form-group">
 							<label for="queryInput" class="col-form-label-sm"
@@ -273,7 +273,7 @@
 								<span class="input-group-text" id="basic-addon1">Host</span>
 							</div>
 							<input type="text" class="form-control"
-								value="mml.arces.unibo.it" id="host">
+								value="dld.arces.unibo.it" id="host">
 						</div>
 
 						<label class="col-form-label-sm mt-3"><b>SPARQL 1.1
@@ -289,7 +289,7 @@
 							<div class="input-group-prepend">
 								<span class="input-group-text" id="basic-addon1">Port</span>
 							</div>
-							<input type="text" class="form-control" value="8000"
+							<input type="text" class="form-control" value="8668"
 								id="sparql11port">
 							<div class="input-group-prepend">
 								<span class="input-group-text" id="basic-addon1">Update
@@ -317,7 +317,7 @@
 							<div class="input-group-prepend mb">
 								<span class="input-group-text" id="basic-addon1">Port</span>
 							</div>
-							<input type="text" class="form-control" value="9000"
+							<input type="text" class="form-control" value="9668"
 								id="sparql11seport">
 							<div class="input-group-prepend">
 								<span class="input-group-text" id="basic-addon1">Subscribe
