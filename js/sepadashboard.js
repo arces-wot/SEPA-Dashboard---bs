@@ -28,6 +28,8 @@ function onInit() {
 			break;
 	}
 	
+	defaultNamespaces();
+	
 }
 
 function loadEditors() {
@@ -132,6 +134,14 @@ function addNamespace() {
 	myJson.namespaces[pr] = ns
 	addNamespaceToAll(pr,ns)
 };
+
+function defaultNamespaces(){
+	addNamespaceToAll("xsd","http://www.w3.org/2001/XMLSchema#");
+	addNamespaceToAll("rdf","http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+	addNamespaceToAll("rdfs","http://www.w3.org/2000/01/rdf-schema#");
+	addNamespaceToAll("time","http://www.w3.org/2006/time#");
+	addNamespaceToAll("owl","http://www.w3.org/2002/07/owl#");
+}
 
 function fixGlobalNamespaces(editor) {
 	let startPrefixes = { line: 0, ch: 0 }
