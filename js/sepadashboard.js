@@ -13,16 +13,27 @@ let emptyMarker = {
 	clear : () => {},
 }
 
+let mode = "playground";
+
 function onInit() {
 	loadEditors()
 
-	let type = getQueryVariable("mode");
-	switch (type) {
+	//let mode = getQueryVariable("mode");
+	
+	switch (mode) {
 		case "local":
 			$("#host").val("localhost");
 			break;
 		case "playground":
 			$("#configPanel").hide()
+			$("#host").val("api.sepa.vaimee.org");
+			$("#sparql11protocol").val("https");
+			$("#sparql11port").val("443");	
+			$("#updatePath").val("/sparql");
+			$("#queryPath").val("/sparql");
+			$("#sparql11seprotocol").val("wss");
+			$("#sparql11seport").val("443");	
+			$("#subscribePath").val("/subscribe");
 			break;
 		default:
 			break;
@@ -191,18 +202,20 @@ function loadJsap() {
 
 
 			// retrieve the URLs
-			$("#host").val(myJson["host"]);
+			if (mode != "playground") {
+				$("#host").val(myJson["host"]);
 			
-			$("#sparql11protocol").val(myJson["sparql11protocol"]["protocol"]);
-			$("#sparql11port").val(myJson["sparql11protocol"]["port"]);	
-			$("#updatePath").val(myJson["sparql11protocol"]["update"]["path"]);
-			$("#queryPath").val(myJson["sparql11protocol"]["query"]["path"]);
+				$("#sparql11protocol").val(myJson["sparql11protocol"]["protocol"]);
+				$("#sparql11port").val(myJson["sparql11protocol"]["port"]);	
+				$("#updatePath").val(myJson["sparql11protocol"]["update"]["path"]);
+				$("#queryPath").val(myJson["sparql11protocol"]["query"]["path"]);
 			
-			ws = myJson["sparql11seprotocol"]["protocol"];
+				ws = myJson["sparql11seprotocol"]["protocol"];
 			
-			$("#sparql11seprotocol").val(ws);
-			$("#sparql11seport").val(myJson["sparql11seprotocol"]["availableProtocols"][ws]["port"]);	
-			$("#subscribePath").val(myJson["sparql11seprotocol"]["availableProtocols"][ws]["path"]);
+				$("#sparql11seprotocol").val(ws);
+				$("#sparql11seport").val(myJson["sparql11seprotocol"]["availableProtocols"][ws]["port"]);	
+				$("#subscribePath").val(myJson["sparql11seprotocol"]["availableProtocols"][ws]["path"]);		
+			}
 			
 			// load queries
 			ul = document.getElementById("queryDropdown");
@@ -415,7 +428,7 @@ function query() {
 
 	const sepa = Sepajs.client;
 	
-	config = {host : $("#host").val() , sparql11protocol: { protocol : "http", port  : $("#sparql11port").val() , query : { "path" : $("#queryPath").val()}}};
+	config = {host : $("#host").val() , sparql11protocol: { protocol : $("#sparql11protocol").val(), port  : $("#sparql11port").val() , query : { "path" : $("#queryPath").val()}}};
 	
 	start = Date.now(); 
 	sepa.query(queryText,config).then((data)=>{
@@ -473,7 +486,7 @@ function update() {
 	let bench = new Sepajs.bench()
 	updateText = bench.sparql(updateText, getForcedBindings("U"));
 
-	config = {host : $("#host").val() , sparql11protocol : { protocol: "http","port" : $("#sparql11port").val() ,update :{ "path" : $("#updatePath").val()}}};
+	config = {host : $("#host").val() , sparql11protocol : { protocol: $("#sparql11protocol").val(),"port" : $("#sparql11port").val() ,update :{ "path" : $("#updatePath").val()}}};
 	
 	const sepa = Sepajs.client;
 	start = Date.now();
@@ -500,8 +513,10 @@ function subscribe() {
 
 	
 	ws = $("#sparql11seprotocol").val();
-	config = { host: $("#host").val(), sparql11seprotocol: { protocol: "ws", availableProtocols: {ws : {port : $("#sparql11seport").val() , path : $("#subscribePath").val()} } }};
-	
+	if (ws == "ws")
+		config = { host: $("#host").val(), sparql11seprotocol: { protocol: $("#sparql11seprotocol").val(), availableProtocols: {ws : {port : $("#sparql11seport").val() , path : $("#subscribePath").val()} } }};
+	else
+		config = { host: $("#host").val(), sparql11seprotocol: { protocol: $("#sparql11seprotocol").val(), availableProtocols: {wss : {port : $("#sparql11seport").val() , path : $("#subscribePath").val()} } }};
 	const sepa = Sepajs.client;
 	let id = generateIdBySuggestion($('#subscriptionAlias').val())
 	let subscription = sepa.subscribe(subscribeText, config, id)
